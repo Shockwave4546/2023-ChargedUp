@@ -25,6 +25,10 @@ public class ShuffleboardDouble implements ShuffleboardValue {
     this(Tab.MISC, name, def);
   }
 
+  public ShuffleboardDouble(String name) {
+    this(Tab.MISC, name, DEFAULT_VALUE);
+  }
+
   public ShuffleboardDouble withSize(int length, int width) {
     widget.withSize(length, width);
     return this;
@@ -42,6 +46,10 @@ public class ShuffleboardDouble implements ShuffleboardValue {
 
   public double get() {
     return widget.getEntry().getDouble(def);
+  }
+
+  public void set(double value) {
+    widget.getEntry().setDouble(value);
   }
 
   @Override public GenericEntry getRaw() {
