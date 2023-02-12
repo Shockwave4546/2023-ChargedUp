@@ -15,4 +15,8 @@ public class ShuffleboardVoltage extends ShuffleboardDouble {
   public ShuffleboardVoltage(String name, double def) {
     this(Tab.MISC, name, def);
   }
+
+  public ShuffleboardVoltage(String name) {
+    this(Tab.MISC, name, DEFAULT_VALUE);
+  }
 }

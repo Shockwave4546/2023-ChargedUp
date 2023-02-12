@@ -24,6 +24,10 @@ public class ShuffleboardBoolean implements ShuffleboardValue {
     this(Tab.MISC, name, def);
   }
 
+  public ShuffleboardBoolean(String name) {
+    this(Tab.MISC, name, DEFAULT_VALUE);
+  }
+
   public ShuffleboardBoolean withSize(int length, int width) {
     widget.withSize(length, width);
     return this;
@@ -36,6 +40,10 @@ public class ShuffleboardBoolean implements ShuffleboardValue {
 
   public boolean get() {
     return widget.getEntry().getBoolean(def);
+  }
+
+  public void set(boolean value) {
+    widget.getEntry().setBoolean(value);
   }
 
   @Override public GenericEntry getRaw() {
