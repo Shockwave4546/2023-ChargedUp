@@ -17,8 +17,8 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public class LowerPivotSubsystem extends ProfiledPIDSubsystem implements PivotSubsystem{ 
-  private final CANSparkMax lowerPivotMotor = new CANSparkMax(24, MotorType.kBrushless);
+public class LowerPivotSubsystem extends ProfiledPIDSubsystem { 
+  private final CANSparkMax lowerPivotMotor = new CANSparkMax(Arm.LowerPivot.MOTOR_ID, MotorType.kBrushless);
   private final RelativeEncoder lowerPivotEncoder = lowerPivotMotor.getEncoder(); 
   private final ShuffleboardDouble lowerPivotDegree = new ShuffleboardDouble("Lower Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(Arm.LowerPivot.KA, Arm.LowerPivot.KG, Arm.LowerPivot.KV, Arm.LowerPivot.KS);
@@ -27,8 +27,7 @@ public class LowerPivotSubsystem extends ProfiledPIDSubsystem implements PivotSu
     super(new ProfiledPIDController(Arm.LowerPivot.P, Arm.LowerPivot.I, Arm.LowerPivot.D, new TrapezoidProfile.Constraints(Arm.LowerPivot.MAX_VELOCITY, Arm.LowerPivot.MAX_ACCELERATION)), 0);
     lowerPivotMotor.restoreFactoryDefaults();
     lowerPivotMotor.setInverted(true);
-    // lowerPivotEncoder.setPositionConversionFactor(Arm.POSITION_CONVERSION_FACTOR);
-    lowerPivotEncoder.setPositionConversionFactor((1.0F/3.0F) * 360.0F);
+    lowerPivotEncoder.setPositionConversionFactor(Arm.POSITION_CONVERSION_FACTOR);
     lowerPivotEncoder.setPosition(0.0);
     Utils.configureSparkMax(lowerPivotMotor);
     setGoal(0.0);
@@ -37,7 +36,7 @@ public class LowerPivotSubsystem extends ProfiledPIDSubsystem implements PivotSu
     // Tab.MISC.addNumber("Lower Pivot Applied Voltage", () -> lowerPivotMotor.getAppliedOutput());
   }
 
-  @Override public void resetPosition() {
+  public void resetPosition() {
     lowerPivotEncoder.setPosition(0.0);
   }
 

@@ -1,40 +1,116 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.Drive;
+import frc.robot.commands.CheesyDriveCommand;
+import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
-import frc.robot.utils.shuffleboard.ShuffleboardSpeed;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final CANSparkMax leader = new CANSparkMax(14, MotorType.kBrushed);
-  private final CANSparkMax follower = new CANSparkMax(15, MotorType.kBrushed);
-  private final Encoder encoder = new Encoder(0, 1);
-  private final ShuffleboardTab tab = Shuffleboard.getTab("Drive Subsystem");
-
-  private final ShuffleboardSpeed speed = new ShuffleboardSpeed(tab, "Speed");
-  private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled?");
+  private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
+  private final AHRS gyro = new AHRS();
+  private final MotorControllerGroup leftMotors = new MotorControllerGroup(
+    configureMotor(new WPI_VictorSPX(Drive.FRONT_LEFT_ID)),
+    configureMotor(new WPI_VictorSPX(Drive.BACK_LEFT_ID))
+  );
+  private final MotorControllerGroup rightMotors = new MotorControllerGroup(
+    configureMotor(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID)),
+    configureMotor(new WPI_VictorSPX(Drive.BACK_RIGHT_ID))
+  );
+  private final Encoder leftEncoder = new Encoder(Drive.LEFT_ENCODER[0], Drive.LEFT_ENCODER[1]);
+  private final Encoder rightEncoder = new Encoder(Drive.RIGHT_ENCODER[0], Drive.RIGHT_ENCODER[1]);
+  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH_METERS);
+  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0);
+  private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
+  private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
 
   public DriveSubsystem() {
-    follower.follow(leader);
-    encoder.setDistancePerPulse((6 * Math.PI) / 8192);
-    tab.add(encoder);
+    leftMotors.setInverted(true);
+
+    leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
+    rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
+
+    resetEncoders();
+    resetGyro();
+    resetOdometry(new Pose2d());
+
+    tab.add("Left Encoder", leftEncoder);
+    tab.add("Right Encoder", rightEncoder);
+    tab.add("Gyro", gyro);
   }
 
   @Override public void periodic() {
-    if (!enabled.get()) {
-      stop();
-      return;
-    }
+    odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+  }
 
-    leader.set(speed.get());
+
+  private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
+    motor.setNeutralMode(NeutralMode.Brake);
+    return motor;
+  }
+
+  public void initTeleop(CommandXboxController controller) {
+    setDefaultCommand(useCheesyDrive.get() ? new CheesyDriveCommand(this, controller) : new TankDriveCommand(this, controller));
+  }
+
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    drive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftMotors.setVoltage(leftVolts);
+    rightMotors.setVoltage(rightVolts);
+    drive.feed();
+  }
+
+  public void resetEncoders() {
+    leftEncoder.reset();
+    rightEncoder.reset();
+  }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    resetGyro();
+    odometry.resetPosition(gyro.getRotation2d(), 0, 0, pose);
+  }
+
+  public double getAverageDistance() {
+    return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
+  }
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  public DifferentialDriveKinematics getKinematics() {
+    return kinematics;
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
   public void stop() {
-    leader.stopMotor();
+    leftMotors.stopMotor();
+    rightMotors.stopMotor();
   }
 }

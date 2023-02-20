@@ -10,7 +10,7 @@ import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 import frc.robot.utils.shuffleboard.ShuffleboardSpeed;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final CANSparkMax intakeMotor = new CANSparkMax(Intake.ID, MotorType.kBrushless);
+  private final CANSparkMax intakeMotor = new CANSparkMax(Intake.MOTOR_ID, MotorType.kBrushless);
   private final ShuffleboardSpeed speed = new ShuffleboardSpeed("Intake Speed");
   private final ShuffleboardBoolean enabled = new ShuffleboardBoolean("Intake Enabled?");
 

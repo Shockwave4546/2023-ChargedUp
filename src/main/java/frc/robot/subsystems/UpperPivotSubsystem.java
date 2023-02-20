@@ -16,8 +16,8 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public class UpperPivotSubsystem extends ProfiledPIDSubsystem implements PivotSubsystem {
-  private final CANSparkMax upperPivotMotor = new CANSparkMax(Arm.UpperPivot.ID, MotorType.kBrushless);
+public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
+  private final CANSparkMax upperPivotMotor = new CANSparkMax(Arm.UpperPivot.MOTOR_ID, MotorType.kBrushless);
   private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder(); 
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble("Upper Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(Arm.UpperPivot.KA, Arm.UpperPivot.KG, Arm.UpperPivot.KV, Arm.UpperPivot.KS);
@@ -34,13 +34,13 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem implements PivotSu
     Tab.MISC.addNumber("Upper Pivot Applied Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
-  @Override public void resetPosition() { 
-    upperPivotEncoder.setPosition(0.0);
-  }
-  
   @Override public void periodic() {
     setGoal(upperPivotAngle.get());
     super.periodic();
+  }
+
+  public void resetPosition() { 
+    upperPivotEncoder.setPosition(0.0);
   }
 
   @Override public void useOutput(double output, TrapezoidProfile.State setpoint) {
