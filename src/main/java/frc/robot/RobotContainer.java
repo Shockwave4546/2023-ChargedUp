@@ -23,7 +23,7 @@ public class RobotContainer {
   }
 
   private void configureAuto() {
-    auto.addPath("StraightLine");
+    auto.addPath("StraightLine3Meters");
   }
 
   private void configureControllers() {

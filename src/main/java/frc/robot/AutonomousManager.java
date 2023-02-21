@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -29,6 +31,7 @@ public class AutonomousManager {
     chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true));
   }
 
+  // TODO: Implement with RamseteAutoBuilder
   private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, boolean resetOdometry) {
     final var path = PathPlanner.loadPath(fileName, new PathConstraints(3, 1));
     final var ramseteCommand = new PPRamseteCommand(
