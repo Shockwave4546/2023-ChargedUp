@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static frc.robot.utils.telemetry.Telemetry.logDouble;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -13,14 +15,17 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
-import frc.robot.utils.telemetry.TelemetricSubsystem;
 
-public class DriveSubsystem extends TelemetricSubsystem {
+public class DriveSubsystem extends SubsystemBase {
+  private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
   private final AHRS gyro = new AHRS();
   private final WPI_VictorSPX frontLeftMotor = configureMotor(new WPI_VictorSPX(Drive.FRONT_LEFT_ID));
   private final WPI_VictorSPX backLeftMotor = configureMotor(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
@@ -33,7 +38,7 @@ public class DriveSubsystem extends TelemetricSubsystem {
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH_METERS);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0);
   private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
-  private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(telemetryTab, "Use Cheesy Drive?");
+  private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
 
   public DriveSubsystem() {
     leftMotors.setInverted(true);
@@ -44,16 +49,15 @@ public class DriveSubsystem extends TelemetricSubsystem {
     resetEncoders();
     resetGyro();
     resetOdometry(new Pose2d());
+
+    tab.add("Left Encoder", leftEncoder);
+    tab.add("Right Encoder", rightEncoder);
+    tab.add("Gyro", gyro);
   }
 
-  @Override public void telemetryInit() {
-    addTelemetry("Left Encoder", leftEncoder);
-    addTelemetry("Right Encoder", rightEncoder);
-    addTelemetry("Gyro", gyro);
-  }
-
-  // TODO: check PDP channels
-  @Override public void telemetryPeriodic() {
+  @Override public void periodic() {
+    odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
+  
     try (final var pdp = new PowerDistribution()) {
       logDouble("Front Left Motor Current", pdp.getCurrent(0));
       logDouble("Back Left Motor Current", pdp.getCurrent(1));
@@ -68,11 +72,6 @@ public class DriveSubsystem extends TelemetricSubsystem {
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
     logDouble("Gyro Angle", gyro.getAngle());
-  }
-
-  @Override public void periodic() {
-    super.periodic();
-    odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   }
 
   private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
