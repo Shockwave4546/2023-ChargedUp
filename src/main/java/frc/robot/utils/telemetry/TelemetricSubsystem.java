@@ -1,26 +1,16 @@
 package frc.robot.utils.telemetry;
 
-import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DataLogEntry;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.IntegerLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class TelemetricSubsystem extends SubsystemBase {
-  private static final DataLog LOG = DataLogManager.getLog();
-  private final HashMap<String, DataLogEntry> cache = new HashMap<>();
   protected final ShuffleboardTab telemetryTab = Shuffleboard.getTab(getName());
 
   public TelemetricSubsystem() {
