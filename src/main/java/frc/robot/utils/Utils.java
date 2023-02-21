@@ -8,8 +8,9 @@ public final class Utils {
     throw new UnsupportedOperationException("The util class should never get instantiated!");
   }
 
-  public static void configureSparkMax(CANSparkMax sparkMax) {
+  public static CANSparkMax configureSparkMax(CANSparkMax sparkMax) {
     sparkMax.setIdleMode(IdleMode.kBrake);
     sparkMax.burnFlash();
+    return sparkMax;
   }
 }
