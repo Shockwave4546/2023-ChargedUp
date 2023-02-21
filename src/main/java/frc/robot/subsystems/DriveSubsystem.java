@@ -12,32 +12,27 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
+import frc.robot.utils.telemetry.TelemetricSubsystem;
 
-public class DriveSubsystem extends SubsystemBase {
-  private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
+public class DriveSubsystem extends TelemetricSubsystem {
   private final AHRS gyro = new AHRS();
-  private final MotorControllerGroup leftMotors = new MotorControllerGroup(
-    configureMotor(new WPI_VictorSPX(Drive.FRONT_LEFT_ID)),
-    configureMotor(new WPI_VictorSPX(Drive.BACK_LEFT_ID))
-  );
-  private final MotorControllerGroup rightMotors = new MotorControllerGroup(
-    configureMotor(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID)),
-    configureMotor(new WPI_VictorSPX(Drive.BACK_RIGHT_ID))
-  );
+  private final WPI_VictorSPX frontLeftMotor = configureMotor(new WPI_VictorSPX(Drive.FRONT_LEFT_ID));
+  private final WPI_VictorSPX backLeftMotor = configureMotor(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
+  private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
+  private final WPI_VictorSPX frontRightMotor = configureMotor(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID));
+  private final WPI_VictorSPX backRightMotor = configureMotor(new WPI_VictorSPX(Drive.BACK_RIGHT_ID));
+  private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, backRightMotor);
   private final Encoder leftEncoder = new Encoder(Drive.LEFT_ENCODER[0], Drive.LEFT_ENCODER[1]);
   private final Encoder rightEncoder = new Encoder(Drive.RIGHT_ENCODER[0], Drive.RIGHT_ENCODER[1]);
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH_METERS);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0);
   private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
-  private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
+  private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(telemetryTab, "Use Cheesy Drive?");
 
   public DriveSubsystem() {
     leftMotors.setInverted(true);
@@ -48,16 +43,28 @@ public class DriveSubsystem extends SubsystemBase {
     resetEncoders();
     resetGyro();
     resetOdometry(new Pose2d());
+  }
 
-    tab.add("Left Encoder", leftEncoder);
-    tab.add("Right Encoder", rightEncoder);
-    tab.add("Gyro", gyro);
+  @Override public void telemetryInit() {
+    addTelemetry("Left Encoder", leftEncoder);
+    addTelemetry("Right Encoder", rightEncoder);
+    addTelemetry("Gyro", gyro);
+  }
+
+  @Override public void telemetryPeriodic() {
+    logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
+    logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
+    logDouble("Front Right Motor Voltage", frontRightMotor.getMotorOutputVoltage());
+    logDouble("Back Right Motor Voltage", backRightMotor.getMotorOutputVoltage());
+    logDouble("Left Encoder Distance", leftEncoder.getDistance(), false, true);
+    logDouble("Right Encoder Distance", rightEncoder.getDistance(), false, true);
+    logDouble("Gyro Angle", gyro.getAngle(), false, true);
   }
 
   @Override public void periodic() {
+    super.periodic();
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   }
-
 
   private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
     motor.setNeutralMode(NeutralMode.Brake);
