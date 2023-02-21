@@ -1,6 +1,10 @@
 package frc.robot.utils.telemetry;
 
 import java.util.HashMap;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.LongSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -31,48 +35,36 @@ public abstract class TelemetricSubsystem extends SubsystemBase {
     telemetryTab.add(name, sendable);
   }
 
-  public void logDouble(String name, double value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addNumber(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new DoubleLogEntry(LOG, name));
-    ((DoubleLogEntry) cache.get(name)).append(value);
+  public void addDouble(String name, DoubleSupplier supplier) {
+    telemetryTab.addDouble(name, supplier);
+  }
+
+  public void addInt(String name, LongSupplier supplier) {
+    telemetryTab.addInteger(name, supplier);
+  }
+
+  public void addBoolean(String name, BooleanSupplier supplier) {
+    telemetryTab.addBoolean(name, supplier);
+  }
+
+  public void addString(String name, Supplier<String> supplier) {
+    telemetryTab.addString(name, supplier);
   }
 
   public void logDouble(String name, double value) {
-    logDouble(name, value, true, true);
-  }
-
-  public void logInt(String name, int value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addNumber(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new IntegerLogEntry(LOG, name));
-    ((IntegerLogEntry) cache.get(name)).append(value);
+    Telemetry.logDouble(name, value);
   }
 
   public void logInt(String name, int value) {
-    logInt(name, value, true, true);
-  }
-
-  public void logBoolean(String name, boolean value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addBoolean(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new BooleanLogEntry(LOG, name));
-    ((BooleanLogEntry) cache.get(name)).append(value);
+    Telemetry.logInt(name, value);
   }
 
   public void logBoolean(String name, boolean value) {
-    logBoolean(name, value, true, true);
-  }
-
-  public void logString(String name, String value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addString(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new StringLogEntry(LOG, name));
-    ((StringLogEntry) cache.get(name)).append(value);
+    Telemetry.logBoolean(name, value);
   }
 
   public void logString(String name, String value) {
-    logString(name, value, true, true);
+    Telemetry.logString(name, value);
   }
 
   public abstract void telemetryInit();

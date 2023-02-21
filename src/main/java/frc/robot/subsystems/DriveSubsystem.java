@@ -65,9 +65,9 @@ public class DriveSubsystem extends TelemetricSubsystem {
     logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
     logDouble("Front Right Motor Voltage", frontRightMotor.getMotorOutputVoltage());
     logDouble("Back Right Motor Voltage", backRightMotor.getMotorOutputVoltage());
-    logDouble("Left Encoder Distance", leftEncoder.getDistance(), false, true);
-    logDouble("Right Encoder Distance", rightEncoder.getDistance(), false, true);
-    logDouble("Gyro Angle", gyro.getAngle(), false, true);
+    logDouble("Left Encoder Distance", leftEncoder.getDistance());
+    logDouble("Right Encoder Distance", rightEncoder.getDistance());
+    logDouble("Gyro Angle", gyro.getAngle());
   }
 
   @Override public void periodic() {
