@@ -29,6 +29,7 @@ public class RobotContainer {
   private void configureControllers() {
     operatorController.leftBumper().onTrue(new InstantCommand(() -> intake.pickUpGamePiece(GamePiece.CONE)));
     operatorController.rightBumper().onTrue(new InstantCommand(() -> intake.pickUpGamePiece(GamePiece.CUBE)));
+    operatorController.rightTrigger().onTrue(new InstantCommand(() -> intake.releaseGamePiece()));
 
     // TODO: add static setpoints for each button
   }

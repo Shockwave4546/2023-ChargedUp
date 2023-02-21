@@ -29,14 +29,21 @@ public class IntakeSubsystem extends SubsystemBase {
     new DebugMotorCommand(tab, "Debug Intake", intakeMotor, this);
   }
 
+  // TODO: Double check the direction
   public void holdGamePiece() {
     if (lastGamePiece == GamePiece.NOTHING) return;
     setRawSpeed((lastGamePiece == GamePiece.CONE ? -1.0 : 1.0) * Intake.HOLD_SPEED);
   }
 
+  // TODO: Double check the direction
   public void pickUpGamePiece(GamePiece gamePiece) {
     this.lastGamePiece = gamePiece;
     setRawSpeed((lastGamePiece == GamePiece.CONE ? -1.0 : 1.0) * Intake.PICK_UP_SPEED);
+  }
+
+  // TODO: Double check the direction
+  public void releaseGamePiece() {
+    setRawSpeed((lastGamePiece == GamePiece.CONE ? 1.0 : -1.0) * Intake.RELEASE_SPEED);
   }
 
   private void setRawSpeed(double speed) {
