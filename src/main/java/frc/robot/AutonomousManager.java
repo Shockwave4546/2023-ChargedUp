@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.Drive;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.shuffleboard.Tab;
+import frc.robot.utils.shuffleboard.GlobalTab;
 
 public class AutonomousManager {
   private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -21,7 +21,7 @@ public class AutonomousManager {
 
   public AutonomousManager(DriveSubsystem drive) {
     this.drive = drive;
-    Tab.MATCH.add("Autonomous Chooser", chooser).withSize(3, 2);
+    GlobalTab.MATCH.add("Autonomous Chooser", chooser).withSize(3, 2);
     chooser.setDefaultOption("Do Nothing", new InstantCommand());
   }
 

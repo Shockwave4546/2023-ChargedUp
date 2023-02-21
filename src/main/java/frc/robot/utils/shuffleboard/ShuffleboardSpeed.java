@@ -13,10 +13,10 @@ public class ShuffleboardSpeed extends ShuffleboardDouble {
   }
 
   public ShuffleboardSpeed(String name, double def) {
-    this(Tab.MISC, name, def);
+    this(GlobalTab.DEBUG, name, def);
   }
 
   public ShuffleboardSpeed(String name) {
-    this(Tab.MISC, name, DEFAULT_VALUE);
+    this(GlobalTab.DEBUG, name, DEFAULT_VALUE);
   }
 } 

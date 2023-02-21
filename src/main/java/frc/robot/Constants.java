@@ -33,6 +33,8 @@ public class Constants {
 
   public static class Intake {
     public static final int MOTOR_ID = 4;
+    public static final double HOLD_SPEED = 0.1;
+    public static final double PICK_UP_SPEED = 0.75;
   }
 
   public static class Arm {
