@@ -1,89 +1,57 @@
 package frc.robot.utils.telemetry;
 
-import java.util.HashMap;
+import static edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import static edu.wpi.first.util.ErrorMessages.requireNonNullParam;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DataLogEntry;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.IntegerLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-public abstract class TelemetricProfiledPIDSubsystem extends ProfiledPIDSubsystem {
-  private static final DataLog LOG = DataLogManager.getLog();
-  private final HashMap<String, DataLogEntry> cache = new HashMap<>();
-  protected final ShuffleboardTab telemetryTab = Shuffleboard.getTab(getName());
+public abstract class TelemetricProfiledPIDSubsystem extends TelemetricSubsystem {
+  protected final ProfiledPIDController controller;
+  protected boolean enabled;
 
-  public TelemetricProfiledPIDSubsystem(ProfiledPIDController controller) {
-    super(controller);
+  public TelemetricProfiledPIDSubsystem(ProfiledPIDController controller, double initialPosition) {
+    this.controller = requireNonNullParam(controller, "controller", "TelemetricProfiledPIDSubsystem");
+    setGoal(initialPosition);
     telemetryInit();
   }
 
-  public TelemetricProfiledPIDSubsystem(ProfiledPIDController controller, double initialPosition) {
-    super(controller, initialPosition);
-    telemetryInit();
+  public TelemetricProfiledPIDSubsystem(ProfiledPIDController controller) {
+    this(controller, 0.0);
   }
 
   @Override public void periodic() {
-    super.periodic();
+    if (enabled) useOutput(controller.calculate(getMeasurement()), controller.getSetpoint());
     telemetryPeriodic();
   }
 
-  public void addTelemetry(String name, Sendable sendable) {
-    telemetryTab.add(name, sendable);
+  public ProfiledPIDController getController() {
+    return controller;
   }
 
-  public void logDouble(String name, double value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addNumber(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new DoubleLogEntry(LOG, name));
-    ((DoubleLogEntry) cache.get(name)).append(value);
+  public void setGoal(TrapezoidProfile.State goal) {
+    controller.setGoal(goal);
   }
 
-  public void logDouble(String name, double value) {
-    logDouble(name, value, true, true);
+  public void setGoal(double goal) {
+    setGoal(new TrapezoidProfile.State(goal, 0));
   }
 
-  public void logInt(String name, int value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addNumber(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new IntegerLogEntry(LOG, name));
-    ((IntegerLogEntry) cache.get(name)).append(value);
+  public void enable() {
+    enabled = true;
+    controller.reset(getMeasurement());
   }
 
-  public void logInt(String name, int value) {
-    logInt(name, value, true, true);
+  public void disable() {
+    enabled = false;
+    useOutput(0, new State());
   }
 
-  public void logBoolean(String name, boolean value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addBoolean(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new BooleanLogEntry(LOG, name));
-    ((BooleanLogEntry) cache.get(name)).append(value);
+  public boolean isEnabled() {
+    return enabled;
   }
+  
+  protected abstract void useOutput(double output, State setpoint);
 
-  public void logBoolean(String name, boolean value) {
-    logBoolean(name, value, true, true);
-  }
-
-  public void logString(String name, String value, boolean addToTab, boolean log) {
-    if (addToTab) telemetryTab.addString(name, () -> value);
-    if (!log) return;
-    if (!cache.containsKey(name)) cache.put(name, new StringLogEntry(LOG, name));
-    ((StringLogEntry) cache.get(name)).append(value);
-  }
-
-  public void logString(String name, String value) {
-    logString(name, value, true, true);
-  }
-
-  public abstract void telemetryInit();
-
-  public abstract void telemetryPeriodic();
+  protected abstract double getMeasurement();
 }

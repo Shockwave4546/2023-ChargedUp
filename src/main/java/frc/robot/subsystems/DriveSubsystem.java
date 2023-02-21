@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -51,7 +52,15 @@ public class DriveSubsystem extends TelemetricSubsystem {
     addTelemetry("Gyro", gyro);
   }
 
+  // TODO: check PDP channels
   @Override public void telemetryPeriodic() {
+    try (final var pdp = new PowerDistribution()) {
+      logDouble("Front Left Motor Current", pdp.getCurrent(0));
+      logDouble("Back Left Motor Current", pdp.getCurrent(1));
+      logDouble("Front Right Motor Current", pdp.getCurrent(2));
+      logDouble("Back Right Motor Current", pdp.getCurrent(3));
+    }
+
     logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
     logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
     logDouble("Front Right Motor Voltage", frontRightMotor.getMotorOutputVoltage());
