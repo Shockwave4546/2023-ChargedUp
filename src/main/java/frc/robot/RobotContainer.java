@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
@@ -9,6 +10,7 @@ import frc.robot.subsystems.UpperPivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 
 public class RobotContainer {
+  public static final PowerDistribution PDP = new PowerDistribution();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   protected final DriveSubsystem drive = new DriveSubsystem();

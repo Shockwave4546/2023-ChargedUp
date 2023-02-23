@@ -13,7 +13,6 @@ public class ShuffleboardBoolean implements ShuffleboardValue {
   public ShuffleboardBoolean(ShuffleboardTab tab, String name, boolean def) {
     this.widget = tab.add(name, def);
     this.def = def;
-    // TODO: Not sure if this is the right Widget type
     widget.withWidget(BuiltInWidgets.kToggleButton);
   }
 

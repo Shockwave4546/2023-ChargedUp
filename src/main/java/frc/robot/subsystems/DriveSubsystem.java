@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static frc.robot.RobotContainer.PDP;
 import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -58,12 +59,11 @@ public class DriveSubsystem extends SubsystemBase {
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   
-    try (final var pdp = new PowerDistribution()) {
-      logDouble("Front Left Motor Current", pdp.getCurrent(0));
-      logDouble("Back Left Motor Current", pdp.getCurrent(1));
-      logDouble("Front Right Motor Current", pdp.getCurrent(2));
-      logDouble("Back Right Motor Current", pdp.getCurrent(3));
-    }
+
+    logDouble("Front Left Motor Current", PDP.getCurrent(0));
+    logDouble("Back Left Motor Current", PDP.getCurrent(1));
+    logDouble("Front Right Motor Current", PDP.getCurrent(2));
+    logDouble("Back Right Motor Current", PDP.getCurrent(3));
 
     logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
     logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
