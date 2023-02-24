@@ -35,17 +35,18 @@ public class AutonomousManager {
    * @param pathName
    */
   public void addPath(String pathName) {
-    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true));
+    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true, new PathConstraints(3.0, 1.0)));
   }
 
   // TODO: Implement with RamseteAutoBuilder
   /**
    * @param fileName
    * @param resetOdometry
+   * @param constraints
    * @return
    */
-  private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, boolean resetOdometry) {
-    final var path = PathPlanner.loadPath(fileName, new PathConstraints(3, 1));
+  private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, boolean resetOdometry, PathConstraints constraints) {
+    final var path = PathPlanner.loadPath(fileName, constraints);
     final var ramseteCommand = new PPRamseteCommand(
       path, 
       drive::getPose, 
