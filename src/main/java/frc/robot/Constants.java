@@ -60,22 +60,6 @@ public class Constants {
     /**
      * 
      */
-    public static class LowerPivot {
-      public static final int MOTOR_ID = 1; 
-      public static final double P = 0.20193;
-      public static final double I = 0.0;
-      public static final double D = 0.0051316;
-      public static final double KS = 0.37344;
-      public static final double KV = 2.44;
-      public static final double KA = 0.12;
-      public static final double KG = 2.26;
-      public static final double MAX_VELOCITY = 100;
-      public static final double MAX_ACCELERATION = 250;
-    }
-
-    /**
-     * 
-     */
     public static class UpperPivot {
       public static final int MOTOR_ID = 2;
       public static final double P = 0.087182;
