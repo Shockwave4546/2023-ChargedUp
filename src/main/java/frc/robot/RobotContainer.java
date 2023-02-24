@@ -19,7 +19,7 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   protected final DriveSubsystem drive = new DriveSubsystem();
-  private final AutonomousManager auto = new AutonomousManager(drive);
+  private final AutonomousManager auto = new AutonomousManager(drive, true);
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 

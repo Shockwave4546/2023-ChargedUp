@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.commands.PPRamseteCommand;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -25,8 +26,9 @@ public class AutonomousManager {
   /**
    * @param drive
    */
-  public AutonomousManager(DriveSubsystem drive) {
+  public AutonomousManager(DriveSubsystem drive, boolean debug) {
     this.drive = drive;
+    if (debug) PathPlannerServer.startServer(5811);
     GlobalTab.MATCH.add("Autonomous Chooser", chooser).withSize(3, 2);
     chooser.setDefaultOption("Do Nothing", new InstantCommand());
   }
