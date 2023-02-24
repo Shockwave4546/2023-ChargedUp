@@ -35,6 +35,9 @@ public class RobotContainer {
    */
   private void configureAuto() {
     auto.addPath("StraightLine3Meters");
+    auto.addPath("ChargeStation");
+    auto.addPath("Mobility");
+    auto.addPath("Top2Piece");
   }
 
   /**
