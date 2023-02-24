@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
    * @see edu.wpi.first.wpilibj.IterativeRobotBase#teleopInit()
    */
   @Override public void teleopInit() {
-    container.drive.initTeleop(container.driveController);
+    // container.drive.initTeleop(container.driveController);
   }
 
   /* (non-Javadoc)
