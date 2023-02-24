@@ -16,6 +16,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
+/**
+ * 
+ */
 public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final ShuffleboardTab tab = Shuffleboard.getTab("UpperPivotSubsystem");
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(Arm.UpperPivot.MOTOR_ID, MotorType.kBrushless));
@@ -23,6 +26,9 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble("Upper Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(Arm.UpperPivot.KA, Arm.UpperPivot.KG, Arm.UpperPivot.KV, Arm.UpperPivot.KS);
 
+  /**
+   * 
+   */
   public UpperPivotSubsystem() {
     super(new ProfiledPIDController(Arm.UpperPivot.P, Arm.UpperPivot.I, Arm.UpperPivot.D, new TrapezoidProfile.Constraints(Arm.UpperPivot.MAX_VELOCITY, Arm.UpperPivot.MAX_ACCELERATION)), 0);
     upperPivotMotor.restoreFactoryDefaults();
@@ -35,19 +41,31 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
     tab.addNumber("Upper Pivot Applied Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
+  /*
+   * 
+   */
   @Override public void periodic() {
     setGoal(upperPivotAngle.get());
     super.periodic();
   }
 
+  /* 
+   * 
+   */
   @Override public void useOutput(double output, TrapezoidProfile.State setpoint) {
     upperPivotMotor.setVoltage(output + feedForward.calculate(setpoint.position, setpoint.velocity));
   }
 
+  /* 
+   * @return 
+   */
   @Override public double getMeasurement() {
     return upperPivotEncoder.getPosition();
   }
 
+  /**
+   * 
+   */
   public void resetPosition() { 
     upperPivotEncoder.setPosition(0.0);
   }

@@ -2,12 +2,21 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 
+/*
+ * 
+ */
 public class Constants {
+  /**
+   * 
+   */
   public static class IO {
     public static final int DRIVE_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
   }
 
+  /**
+   * 
+   */
   public static class Drive {
     private static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6);
     private static final double PULSES_PER_REVOLUTION = 2048;
@@ -31,6 +40,9 @@ public class Constants {
     public static final double RAMSETE_ZETA = 0.7;
   }
 
+  /**
+   * 
+   */
   public static class Intake {
     public static final int MOTOR_ID = 4;
     public static final double HOLD_SPEED = 0.1;
@@ -38,10 +50,16 @@ public class Constants {
     public static final double RELEASE_SPEED = 0.75;
   }
 
+  /**
+   * 
+   */
   public static class Arm {
     private static final float GEAR_RATIO = 125.0F;
     public static final float POSITION_CONVERSION_FACTOR = (1.0F / GEAR_RATIO) * 360.0F;
 
+    /**
+     * 
+     */
     public static class LowerPivot {
       public static final int MOTOR_ID = 1; 
       public static final double P = 0.20193;
@@ -55,6 +73,9 @@ public class Constants {
       public static final double MAX_ACCELERATION = 250;
     }
 
+    /**
+     * 
+     */
     public static class UpperPivot {
       public static final int MOTOR_ID = 2;
       public static final double P = 0.087182;

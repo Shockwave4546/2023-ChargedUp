@@ -11,6 +11,9 @@ import frc.robot.commands.HoldGamePieceCommand;
 import frc.robot.utils.Utils;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
 
+/**
+ * 
+ */
 public class IntakeSubsystem extends SubsystemBase {
   public enum GamePiece {
     CONE, CUBE, NOTHING
@@ -20,6 +23,9 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax intakeMotor = new CANSparkMax(Intake.MOTOR_ID, MotorType.kBrushless);
   private GamePiece lastGamePiece = GamePiece.NOTHING;
 
+  /**
+   * 
+   */
   public IntakeSubsystem() {
     intakeMotor.restoreFactoryDefaults();
     Utils.configureSparkMax(intakeMotor);
@@ -29,27 +35,39 @@ public class IntakeSubsystem extends SubsystemBase {
     new DebugMotorCommand(tab, "Debug Intake", intakeMotor, this);
   }
 
-  // TODO: Double check the direction
+  /**
+   * 
+   */
   public void holdGamePiece() {
     if (lastGamePiece == GamePiece.NOTHING) return;
     setRawSpeed((lastGamePiece == GamePiece.CONE ? -1.0 : 1.0) * Intake.HOLD_SPEED);
   }
 
-  // TODO: Double check the direction
+  /**
+   * @param gamePiece
+   */
   public void pickUpGamePiece(GamePiece gamePiece) {
     this.lastGamePiece = gamePiece;
     setRawSpeed((lastGamePiece == GamePiece.CONE ? -1.0 : 1.0) * Intake.PICK_UP_SPEED);
   }
 
-  // TODO: Double check the direction
+  /**
+   * 
+   */
   public void releaseGamePiece() {
     setRawSpeed((lastGamePiece == GamePiece.CONE ? 1.0 : -1.0) * Intake.RELEASE_SPEED);
   }
 
+  /**
+   * @param speed
+   */
   private void setRawSpeed(double speed) {
     intakeMotor.set(speed);
   }
 
+  /**
+   * 
+   */
   public void stop() {
     intakeMotor.stopMotor();
   }

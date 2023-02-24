@@ -2,13 +2,21 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.Pair;
 
-// Source: https://github.com/Team254/FRC-2016-Public/blob/811d5e11867ef7c659f98e01f48e3720d8724df1/src/com/team254/frc2016/CheesyDriveHelper.java
+/**
+ * Source: https://github.com/Team254/FRC-2016-Public/blob/811d5e11867ef7c659f98e01f48e3720d8724df1/src/com/team254/frc2016/CheesyDriveHelper.java
+ */
 public class CheesyDriveHelper {
   private static final double SPEED_DEADBAND = 0.02;
   private static final double ROT_DEADBAND = 0.02;
   private static final double TURN_SENSITIVTY = 1.0;
   private double quickStopAccumulator;
 
+  /**
+   * @param speed
+   * @param rotValue
+   * @param isQuickTurn
+   * @return
+   */
   public Pair<Double, Double> cheesyDrive(double speed, double rotValue, boolean isQuickTurn) {
     speed = handleDeadband(speed, SPEED_DEADBAND);
     rotValue = handleDeadband(rotValue, ROT_DEADBAND);
@@ -54,10 +62,20 @@ public class CheesyDriveHelper {
     return new Pair<Double,Double>(leftSpeed, rightSpeed);
   }
 
+  /**
+   * @param val
+   * @param deadband
+   * @return
+   */
   public static double handleDeadband(double val, double deadband) {
     return Math.abs(val) > Math.abs(deadband) ? val : 0.0;
   }
 
+  /**
+   * @param val
+   * @param limit
+   * @return
+   */
   private static double limit(double val, double limit) {
     return Math.abs(val) < limit ? val : limit * (val < 0 ? -1 : 1);
   }

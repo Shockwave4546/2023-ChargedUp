@@ -8,6 +8,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 
+/**
+ * 
+ */
 public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
@@ -16,16 +19,25 @@ public class RobotContainer {
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
+  /**
+   * 
+   */
   public RobotContainer() {
     configureAuto();
     configureControllers();
     // lowerPivot.enable();
   }
 
+  /**
+   * 
+   */
   private void configureAuto() {
     auto.addPath("StraightLine3Meters");
   }
 
+  /**
+   * 
+   */
   private void configureControllers() {
     operatorController.leftBumper().onTrue(new InstantCommand(() -> intake.pickUpGamePiece(GamePiece.CONE)));
     operatorController.rightBumper().onTrue(new InstantCommand(() -> intake.pickUpGamePiece(GamePiece.CUBE)));

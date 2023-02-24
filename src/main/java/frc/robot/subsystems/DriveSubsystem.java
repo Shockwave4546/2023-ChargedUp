@@ -24,6 +24,9 @@ import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 
+/**
+ * 
+ */
 public class DriveSubsystem extends SubsystemBase {
   private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
   private final AHRS gyro = new AHRS();
@@ -40,6 +43,9 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
   private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
 
+  /**
+   * 
+   */
   public DriveSubsystem() {
     leftMotors.setInverted(true);
 
@@ -55,6 +61,9 @@ public class DriveSubsystem extends SubsystemBase {
     tab.add("Gyro", gyro);
   }
 
+  /*
+   * 
+   */
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   
@@ -74,56 +83,95 @@ public class DriveSubsystem extends SubsystemBase {
     logDouble("Gyro Angle", gyro.getAngle());
   }
 
+  /**
+   * @param motor
+   * @return
+   */
   private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
     motor.setNeutralMode(NeutralMode.Brake);
     return motor;
   }
 
+  /**
+   * @param controller
+   */
   public void initTeleop(CommandXboxController controller) {
     setDefaultCommand(useCheesyDrive.get() ? new CheesyDriveCommand(this, controller) : new TankDriveCommand(this, controller));
   }
 
+  /**
+   * @param leftSpeed
+   * @param rightSpeed
+   */
   public void tankDrive(double leftSpeed, double rightSpeed) {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  /**
+   * @param leftVolts
+   * @param rightVolts
+   */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftMotors.setVoltage(leftVolts);
     rightMotors.setVoltage(rightVolts);
     drive.feed();
   }
 
+  /**
+   * 
+   */
   public void resetEncoders() {
     leftEncoder.reset();
     rightEncoder.reset();
   }
 
+  /**
+   * 
+   */
   public void resetGyro() {
     gyro.reset();
   }
 
+  /**
+   * @param pose
+   */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     resetGyro();
     odometry.resetPosition(gyro.getRotation2d(), 0, 0, pose);
   }
 
+  /**
+   * @return
+   */
   public double getAverageDistance() {
     return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
   }
 
+  /**
+   * @return
+   */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
+  /**
+   * @return
+   */
   public DifferentialDriveKinematics getKinematics() {
     return kinematics;
   }
 
+  /**
+   * @return
+   */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
+  /**
+   * 
+   */
   public void stop() {
     leftMotors.stopMotor();
     rightMotors.stopMotor();

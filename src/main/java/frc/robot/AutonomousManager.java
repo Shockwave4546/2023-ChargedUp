@@ -15,21 +15,35 @@ import frc.robot.Constants.Drive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.shuffleboard.GlobalTab;
 
+/**
+ * 
+ */
 public class AutonomousManager {
   private final SendableChooser<Command> chooser = new SendableChooser<>();
   private final DriveSubsystem drive;
 
+  /**
+   * @param drive
+   */
   public AutonomousManager(DriveSubsystem drive) {
     this.drive = drive;
     GlobalTab.MATCH.add("Autonomous Chooser", chooser).withSize(3, 2);
     chooser.setDefaultOption("Do Nothing", new InstantCommand());
   }
 
+  /**
+   * @param pathName
+   */
   public void addPath(String pathName) {
     chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true));
   }
 
   // TODO: Implement with RamseteAutoBuilder
+  /**
+   * @param fileName
+   * @param resetOdometry
+   * @return
+   */
   private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, boolean resetOdometry) {
     final var path = PathPlanner.loadPath(fileName, new PathConstraints(3, 1));
     final var ramseteCommand = new PPRamseteCommand(

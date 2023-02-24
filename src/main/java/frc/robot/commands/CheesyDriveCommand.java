@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.utils.CheesyDriveHelper;
 import frc.robot.subsystems.DriveSubsystem;
 
+/**
+ * 
+ */
 public class CheesyDriveCommand extends CommandBase {
   private static final double DEADBAND = 0.02;
   private static final double QUICK_TURN_THRESHOLD = 0.2;  
@@ -12,16 +15,26 @@ public class CheesyDriveCommand extends CommandBase {
   private final CommandXboxController controller;
   private final CheesyDriveHelper helper = new CheesyDriveHelper();
 
+  /**
+   * @param drive
+   * @param controller
+   */
   public CheesyDriveCommand(DriveSubsystem drive, CommandXboxController controller) {
     this.drive = drive;
     this.controller = controller;
     addRequirements(drive);
   }
 
+  /**
+   * 
+   */
   @Override public void initialize() {
     drive.stop(); 
   }
 
+  /**
+   * 
+   */
   @Override public void execute() {
     final var rotateValue = CheesyDriveHelper.handleDeadband(controller.getRightX() * 0.5, DEADBAND);
     final var moveValue = CheesyDriveHelper.handleDeadband(controller.getLeftY() * 1.00, DEADBAND);
@@ -30,6 +43,9 @@ public class CheesyDriveCommand extends CommandBase {
     drive.tankDrive(speeds.getFirst(), speeds.getSecond());
   }
 
+  /**
+   * @param interrupted
+   */
   @Override public void end(boolean interrupted) {
     drive.stop();
   }
