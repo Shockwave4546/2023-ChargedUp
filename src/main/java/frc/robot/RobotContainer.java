@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,10 +36,10 @@ public class RobotContainer {
    * 
    */
   private void configureAuto() {
-    auto.addPath("StraightLine3Meters");
-    auto.addPath("ChargeStation");
-    auto.addPath("Mobility");
-    auto.addPath("Top2Piece");
+    auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0));
+    auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0));
+    auto.addPath("Mobility", new PathConstraints(3.0, 1.0));
+    auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0));
   }
 
   /**

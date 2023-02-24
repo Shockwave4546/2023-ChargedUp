@@ -34,8 +34,8 @@ public class AutonomousManager {
   /**
    * @param pathName
    */
-  public void addPath(String pathName) {
-    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true, new PathConstraints(3.0, 1.0)));
+  public void addPath(String pathName, PathConstraints constraints) {
+    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true, constraints));
   }
 
   // TODO: Implement with RamseteAutoBuilder
