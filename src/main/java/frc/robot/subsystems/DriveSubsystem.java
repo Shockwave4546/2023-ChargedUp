@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   
-
+    // TODO: fix channels
     logDouble("Front Left Motor Current", PDP.getCurrent(0));
     logDouble("Back Left Motor Current", PDP.getCurrent(1));
     logDouble("Front Right Motor Current", PDP.getCurrent(2));
