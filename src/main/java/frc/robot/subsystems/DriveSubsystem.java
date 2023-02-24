@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,7 +25,7 @@ import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 
 /**
- * 
+ * Represents the Differential Drive used in the Kit Chassis.
  */
 public class DriveSubsystem extends SubsystemBase {
   private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
@@ -45,7 +44,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
 
   /**
-   * 
+   * Initalizes and configures all the values for Encoders (@see Encoder#setDistancePerPulse) and motors (@see WPI_VictorSPX#setInverted).
+   * Additionally, all measurement devices are zeroed in the event of previous data stored on them.
    */
   public DriveSubsystem() {
     leftMotors.setInverted(true);
@@ -63,7 +63,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /*
-   * 
+   * Updates the odometry assoiciated with the drivetrain.
+   * Logs debugging information about motor power, encoder distances, and gyroscope's angle. 
    */
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
@@ -84,8 +85,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * @param motor
-   * @return
+   * Sets brake mode on the drivetrain motor.
+   * 
+   * @param motor the motor to be configured.
+   * @return the configured motor.
    */
   private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
     motor.setNeutralMode(NeutralMode.Brake);
@@ -93,23 +96,31 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * @param controller
+   * Depending on the preference of the driver, either cheesy drive or regular tank drive can be used in tele-op.
+   * In Shuffleboard, a boolean toggle swtich is used to switch between the two.
+   * Note: the toggle switch must be clicked before the enabling of tele-op, otherwise, the preference won't apply.
+   * 
+   * @param controller the controller used to control the robot during tele-operated period.
    */
   public void initTeleop(CommandXboxController controller) {
     setDefaultCommand(useCheesyDrive.get() ? new CheesyDriveCommand(this, controller) : new TankDriveCommand(this, controller));
   }
 
   /**
-   * @param leftSpeed
-   * @param rightSpeed
+   * A typical tank drive function to control the speeds of the left and right side of the drivetrain.
+   * 
+   * @param leftSpeed [-1.0 to 1.0] the speed of the left side.
+   * @param rightSpeed [-1.0 to 1.0] the speed of the right side.
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   /**
-   * @param leftVolts
-   * @param rightVolts
+   * A typical tank drive function but voltage is used to control the motors rather than "speed".
+   * 
+   * @param leftVolts [-12.0 to 12.0] the voltage applied to the left side motors.
+   * @param rightVolts [-12.0 to 12.0] the voltage applied to the right side motors.
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftMotors.setVoltage(leftVolts);
@@ -118,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * 
+   * Zeros the encoders.
    */
   public void resetEncoders() {
     leftEncoder.reset();
@@ -126,14 +137,18 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * 
+   * Zeros the gyroscope.
    */
   public void resetGyro() {
     gyro.reset();
   }
 
   /**
-   * @param pose
+   * Resets the odometry (relative position) of the robot.
+   * Note: this will zero the encoders and gyroscope as well.
+   * 
+   * @param pose the pose to reset the odometry to. In most instances, a blank {@link edu.wpi.first.math.geometry.Pose2D} would be used.
+   * However, when running multiple autonomous routines, the pose can definetely be set to the current pose as well. 
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
@@ -142,35 +157,43 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * @return
+   * Returns the average distance traveled by the robot.
+   * 
+   * @return the average distance of the left and ride encoders in inches.
    */
   public double getAverageDistance() {
     return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
   }
 
   /**
-   * @return
+   * Returns the current pose of the robot.
+   * 
+   * @return the current pose of the robot in meters.
    */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
   /**
-   * @return
+   * Returns the kinematics of the drivetrain.
+   * 
+   * @return the kinematics of the drivetrain.
    */
   public DifferentialDriveKinematics getKinematics() {
     return kinematics;
   }
 
   /**
-   * @return
+   * Returns the wheel speeds of the robot in m/s^2.
+   * 
+   * @return the current wheel speeds of the robot in m/s^2.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
   }
 
   /**
-   * 
+   * Stops the drivetrain.
    */
   public void stop() {
     leftMotors.stopMotor();
