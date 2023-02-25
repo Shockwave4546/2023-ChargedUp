@@ -40,6 +40,13 @@ public class AutonomousManager {
     chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, true, constraints));
   }
 
+  /**
+   * 
+   */
+  public void executeRoutine() {
+    chooser.getSelected().schedule();
+  }
+
   // TODO: Implement with RamseteAutoBuilder
   /**
    * @param fileName
