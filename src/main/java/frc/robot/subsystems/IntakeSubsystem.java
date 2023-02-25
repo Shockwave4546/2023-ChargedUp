@@ -16,13 +16,6 @@ import frc.robot.utils.shuffleboard.DebugMotorCommand;
  * Represents the intake of our robot, responsible for picking up and releasing of cubes and cones.
  */
 public class IntakeSubsystem extends SubsystemBase {
-  /**
-   * Represents an individual game piece, which is stored to dynamically adjust the direction of the intake. 
-   */
-  public enum GamePiece {
-    CONE, CUBE, NOTHING
-  }
-
   private final ShuffleboardTab tab = Shuffleboard.getTab("IntakeSubsystem");
   private final CANSparkMax intakeMotor = configureSparkMax(new CANSparkMax(Intake.MOTOR_ID, MotorType.kBrushless));
   private GamePiece lastGamePiece = GamePiece.NOTHING;
@@ -82,5 +75,12 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public void stop() {
     intakeMotor.stopMotor();
+  }
+
+    /**
+   * Represents an individual game piece, which is stored to dynamically adjust the direction of the intake. 
+   */
+  public enum GamePiece {
+    CONE, CUBE, NOTHING
   }
 }

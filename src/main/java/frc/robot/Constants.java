@@ -24,9 +24,9 @@ public class Constants {
     public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(24);
 
     public static final int FRONT_LEFT_ID = 0;
-    public static final int BACK_LEFT_ID = 0;
-    public static final int FRONT_RIGHT_ID = 0;
-    public static final int BACK_RIGHT_ID = 0;
+    public static final int BACK_LEFT_ID = 1;
+    public static final int FRONT_RIGHT_ID = 2;
+    public static final int BACK_RIGHT_ID = 3;
     public static final int[] LEFT_ENCODER = new int[] {0, 1};
     public static final int[] RIGHT_ENCODER = new int[] {2, 3};
 
@@ -66,7 +66,7 @@ public class Constants {
      * 
      */
     public static class UpperPivot {
-      public static final int MOTOR_ID = 2;
+      public static final int MOTOR_ID = 5;
       public static final double P = 0.087182;
       public static final double I = 0.0;
       public static final double D = 0.0020132;
@@ -78,4 +78,18 @@ public class Constants {
       public static final double MAX_ACCELERATION = 250;
     }
   } 
+
+  /**
+   * 
+   */
+  public static class BackWinch {
+    public static final int MOTOR_ID = 6;
+  }
+
+  /**
+   * 
+   */
+  public static class FrontWinch {
+    public static final int MOTOR_ID = 7;
+  }
 }
