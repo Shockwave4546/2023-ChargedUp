@@ -33,13 +33,14 @@ public class RobotContainer {
   // private final VisionSubsystem vision = new VisionSubsystem();
   private final BackWinchSubsystem backWinch = new BackWinchSubsystem();
   private final FrontWinchSubsystem frontWinch = new FrontWinchSubsystem();
-  // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
+  protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   // private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
   /**
    * 
    */
   public RobotContainer() {
+    GlobalTab.DEBUG.add("PDP", PDP);
     configureAuto();
     configureControllers();
     // upperPivot.enable()

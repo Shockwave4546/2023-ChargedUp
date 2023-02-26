@@ -86,8 +86,8 @@ public class Constants {
    */
   public static class BackWinch {
     public static final int MOTOR_ID = 6;
-    public static final double POSITION_CONVERSION_FACTOR = 360.0;
-    public static final double P = 0.0;
+    public static final float POSITION_CONVERSION_FACTOR = (1.0F / 36.0F) * 360.0F;
+    public static final double P = 1.0;
     public static final double I = 0.0;
     public static final double D = 0.0;
   }
@@ -99,7 +99,7 @@ public class Constants {
     public static final int MOTOR_ID = 7;
     public static final double POSITION_CONVERSION_FACTOR = 360.0;
     public static final double DISTANCE_PER_PULSE =  360.0 / QUAD_ENCODER_PULSES_PER_REVOLUTION;
-    public static final double P = 0.0;
+    public static final double P = 1.0;
     public static final double I = 0.0;
     public static final double D = 0.0;
     public static final int[] ENCODER = new int[] {4, 5};

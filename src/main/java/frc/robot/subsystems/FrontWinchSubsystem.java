@@ -22,9 +22,9 @@ import frc.robot.utils.shuffleboard.ShuffleboardDouble;
  */
 public class FrontWinchSubsystem extends PIDSubsystem {
   private final ShuffleboardTab tab = Shuffleboard.getTab("FrontWinchSubsystem");
-  // private final CANSparkMax frontWinchMotor = configureSparkMax(new CANSparkMax(FrontWinch.MOTOR_ID, MotorType.kBrushless));
+  private final CANSparkMax frontWinchMotor = configureSparkMax(new CANSparkMax(FrontWinch.MOTOR_ID, MotorType.kBrushed));
   // private final RelativeEncoder frontWinchEncoder = frontWinchMotor.getAlternateEncoder(8192);
-  private final WPI_VictorSPX frontWinchMotor = configureVictorSPX(new WPI_VictorSPX(FrontWinch.MOTOR_ID));
+  // private final WPI_VictorSPX frontWinchMotor = configureVictorSPX(new WPI_VictorSPX(FrontWinch.MOTOR_ID));
   private final Encoder frontWinchEncoder = new Encoder(FrontWinch.ENCODER[0], FrontWinch.ENCODER[1]);
   private final ShuffleboardDouble frontWinchAngle = new ShuffleboardDouble(tab, "Front Winch Angle");
 
@@ -39,6 +39,7 @@ public class FrontWinchSubsystem extends PIDSubsystem {
 
     new DebugMotorCommand(tab, "Front Winch", frontWinchMotor, this);
     tab.add("Front Winch PID Controller", getController());
+    tab.add("Front Winch Encoder", frontWinchEncoder);
   }
 
   @Override public void periodic() {
@@ -61,7 +62,8 @@ public class FrontWinchSubsystem extends PIDSubsystem {
    */
   @Override protected double getMeasurement() {
     // return frontWinchEncoder.getPosition();
-    return frontWinchEncoder.getDistance();
+    // return frontWinchEncoder.getDistance();
+    return 0;
   }
 
   /**
@@ -69,6 +71,7 @@ public class FrontWinchSubsystem extends PIDSubsystem {
    */
   private void resetPosition() {
     // frontWinchEncoder.setPosition(0.0);
-    frontWinchEncoder.reset();
+    // frontWinchEncoder.reset();
+
   }
 }

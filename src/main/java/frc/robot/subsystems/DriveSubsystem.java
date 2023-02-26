@@ -7,6 +7,8 @@ import static frc.robot.utils.telemetry.Telemetry.logDouble;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
+import frc.robot.utils.Utils;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 
 /**
@@ -35,7 +38,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final WPI_VictorSPX backLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
   private final WPI_VictorSPX frontRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID));
-  private final WPI_VictorSPX backRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_RIGHT_ID));
+  private final CANSparkMax backRightMotor = Utils.configureSparkMax(new CANSparkMax(Drive.BACK_RIGHT_ID, MotorType.kBrushed));
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, backRightMotor);
   private final Encoder leftEncoder = new Encoder(Drive.LEFT_ENCODER[0], Drive.LEFT_ENCODER[1]);
   private final Encoder rightEncoder = new Encoder(Drive.RIGHT_ENCODER[0], Drive.RIGHT_ENCODER[1]);
@@ -49,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Additionally, all measurement devices are zeroed in the event of previous data stored on them.
    */
   public DriveSubsystem() {
-    leftMotors.setInverted(true);
+    rightMotors.setInverted(true);
 
     leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
@@ -71,15 +74,15 @@ public class DriveSubsystem extends SubsystemBase {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   
     // TODO: fix channels
-    logDouble("Front Left Motor Current", PDP.getCurrent(0));
-    logDouble("Back Left Motor Current", PDP.getCurrent(1));
-    logDouble("Front Right Motor Current", PDP.getCurrent(2));
-    logDouble("Back Right Motor Current", PDP.getCurrent(3));
+    logDouble("Front Left Motor Current", PDP.getCurrent(14));
+    logDouble("Back Left Motor Current", PDP.getCurrent(13));
+    logDouble("Front Right Motor Current", PDP.getCurrent(15));
+    logDouble("Back Right Motor Current", PDP.getCurrent(12));
 
     logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
     logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
     logDouble("Front Right Motor Voltage", frontRightMotor.getMotorOutputVoltage());
-    logDouble("Back Right Motor Voltage", backRightMotor.getMotorOutputVoltage());
+    logDouble("Back Right Motor Voltage", backRightMotor.getBusVoltage());
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
     logDouble("Gyro Angle", gyro.getAngle());
