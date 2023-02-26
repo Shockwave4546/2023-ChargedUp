@@ -1,11 +1,14 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 
 /*
  * 
  */
 public class Constants {
+  private static final double QUAD_ENCODER_PULSES_PER_REVOLUTION = 2048.0;
+
   /**
    * 
    */
@@ -19,8 +22,7 @@ public class Constants {
    */
   public static class Drive {
     private static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6);
-    private static final double PULSES_PER_REVOLUTION = 2048;
-    public static final double DISTANCE_PER_PULSE =  (Math.PI * WHEEL_DIAMETER_METERS) / PULSES_PER_REVOLUTION;
+    public static final double DISTANCE_PER_PULSE =  (Math.PI * WHEEL_DIAMETER_METERS) / QUAD_ENCODER_PULSES_PER_REVOLUTION;
     public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(24);
 
     public static final int FRONT_LEFT_ID = 0;
@@ -84,6 +86,10 @@ public class Constants {
    */
   public static class BackWinch {
     public static final int MOTOR_ID = 6;
+    public static final double POSITION_CONVERSION_FACTOR = 360.0;
+    public static final double P = 0.0;
+    public static final double I = 0.0;
+    public static final double D = 0.0;
   }
 
   /**
@@ -91,5 +97,19 @@ public class Constants {
    */
   public static class FrontWinch {
     public static final int MOTOR_ID = 7;
+    public static final double POSITION_CONVERSION_FACTOR = 360.0;
+    public static final double DISTANCE_PER_PULSE =  360.0 / QUAD_ENCODER_PULSES_PER_REVOLUTION;
+    public static final double P = 0.0;
+    public static final double I = 0.0;
+    public static final double D = 0.0;
+    public static final int[] ENCODER = new int[] {4, 5};
+  }
+
+  /**
+   * 
+   */
+  public static class LED {
+    public static final int LED_PORT = 0;
+    public static final Color SHOCKWAVE_GREEN = new Color(0, 255, 0);
   }
 }

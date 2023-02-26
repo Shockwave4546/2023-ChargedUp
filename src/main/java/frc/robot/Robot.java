@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
    * @see edu.wpi.first.wpilibj.IterativeRobotBase#autonomousInit()
    */
   @Override public void autonomousInit() {
-    // container.auto,executeRoutine();
+    // container.auto.executeRoutine();
   }
 
   /* (non-Javadoc)

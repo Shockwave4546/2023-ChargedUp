@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.RobotContainer.PDP;
+import static frc.robot.utils.Utils.configureVictorSPX;
 import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -30,11 +31,11 @@ import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 public class DriveSubsystem extends SubsystemBase {
   private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
   private final AHRS gyro = new AHRS();
-  private final WPI_VictorSPX frontLeftMotor = configureMotor(new WPI_VictorSPX(Drive.FRONT_LEFT_ID));
-  private final WPI_VictorSPX backLeftMotor = configureMotor(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
+  private final WPI_VictorSPX frontLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.FRONT_LEFT_ID));
+  private final WPI_VictorSPX backLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
-  private final WPI_VictorSPX frontRightMotor = configureMotor(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID));
-  private final WPI_VictorSPX backRightMotor = configureMotor(new WPI_VictorSPX(Drive.BACK_RIGHT_ID));
+  private final WPI_VictorSPX frontRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID));
+  private final WPI_VictorSPX backRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_RIGHT_ID));
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, backRightMotor);
   private final Encoder leftEncoder = new Encoder(Drive.LEFT_ENCODER[0], Drive.LEFT_ENCODER[1]);
   private final Encoder rightEncoder = new Encoder(Drive.RIGHT_ENCODER[0], Drive.RIGHT_ENCODER[1]);
@@ -82,17 +83,6 @@ public class DriveSubsystem extends SubsystemBase {
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
     logDouble("Gyro Angle", gyro.getAngle());
-  }
-
-  /**
-   * Sets brake mode on the drivetrain motor.
-   * 
-   * @param motor the motor to be configured.
-   * @return the configured motor.
-   */
-  private WPI_VictorSPX configureMotor(WPI_VictorSPX motor) {
-    motor.setNeutralMode(NeutralMode.Brake);
-    return motor;
   }
 
   /**

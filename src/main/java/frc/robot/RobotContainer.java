@@ -11,6 +11,7 @@ import frc.robot.Constants.BackWinch;
 import frc.robot.Constants.IO;
 import frc.robot.subsystems.BackWinchSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FrontWinchSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
@@ -28,11 +29,12 @@ public class RobotContainer {
   // private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   // protected final DriveSubsystem drive = new DriveSubsystem();
   // private final AutonomousManager auto = new AutonomousManager(drive, true);
-  // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
-  // private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
   // private final LEDSubsystem led = new LEDSubsystem();
   // private final VisionSubsystem vision = new VisionSubsystem();
   private final BackWinchSubsystem backWinch = new BackWinchSubsystem();
+  private final FrontWinchSubsystem frontWinch = new FrontWinchSubsystem();
+  // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
+  // private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
   /**
    * 
@@ -40,8 +42,9 @@ public class RobotContainer {
   public RobotContainer() {
     configureAuto();
     configureControllers();
-    // lowerPivot.enable();
-
+    // upperPivot.enable()
+    // backWinch.enable();
+    // frontWinch.enable();
   }
 
   /**
