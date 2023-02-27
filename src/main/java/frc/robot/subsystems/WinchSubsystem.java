@@ -44,7 +44,7 @@ public class WinchSubsystem extends SubsystemBase {
 
   @Override public void periodic() {
     // runWinches(); 
-    runWinchesSync(true, VERTICAL_ANGLE);
+    runWinchesSync(true, armPivotGyro.getAngle());
   }
 
   private void runWinches() {
@@ -54,9 +54,9 @@ public class WinchSubsystem extends SubsystemBase {
     }
     
     if (currentAngle < VERTICAL_ANGLE && previousAngle < currentAngle) { // Below the vertical point and approaching towards above the vertical
-      runWinchesSync(true, VERTICAL_ANGLE);
+      runWinchesSync(true, currentAngle);
     } else if (currentAngle > VERTICAL_ANGLE && previousAngle > currentAngle) { // Above the vertical point and approaching towards below the vertical
-      runWinchesSync(false, VERTICAL_ANGLE);
+      runWinchesSync(false, currentAngle);
     } else {
       backWinchMotor.setVoltage(backWinchPID.calculate(currentAngle, setpoint.get())); // Run back winch normally to drop the arm
     }
