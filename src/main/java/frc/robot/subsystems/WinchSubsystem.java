@@ -54,7 +54,7 @@ public class WinchSubsystem extends SubsystemBase {
     tab.add("Reset Gyro", new InstantCommand(this::resetGyro, this));
     frontWinchMotor.stopMotor();
     backWinchMotor.stopMotor();
-    
+
   }
 
   @Override public void periodic() {
@@ -104,7 +104,7 @@ public class WinchSubsystem extends SubsystemBase {
   // range setpoint - 2, setpoint + 2
   private void runWinchesSync(boolean approachingAboveVertical) {    
     frontWinchMotor.set((approachingAboveVertical ? 1.0 : -1.0) * FRONT_SPEED);
-    backWinchMotor.set((approachingAboveVertical ? -1.0 : 1.0) * BACK_SPEED);
+    backWinchMotor.set((approachingAboveVertical ? 1.0 : -1.0) * BACK_SPEED);
   }
 
   public void setSetpoint(double setpoint) {
