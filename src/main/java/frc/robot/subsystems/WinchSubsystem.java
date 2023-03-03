@@ -27,7 +27,7 @@ public class WinchSubsystem extends SubsystemBase {
   private static final double VERTICAL_ANGLE = 22.0;
   private static final double BACK_SPEED = 0.22;
   private static final double FRONT_SPEED = 0.50;
-  private static final double TOLERANCE = 2.0;
+  private static final double TOLERANCE = 1.0;
 
   private final ShuffleboardTab tab = Shuffleboard.getTab("WinchSubsystem");
   private final CANSparkMax backWinchMotor = new CANSparkMax(BackWinch.MOTOR_ID, MotorType.kBrushless);
@@ -62,7 +62,7 @@ public class WinchSubsystem extends SubsystemBase {
   }
 
   private void runWinches() {
-    final var currentAngle = Math.round(-armPivotGyro.getRoll() * 10.0) / 10.0; // Get to nearest tenth because we don't need 10 million decimal places.
+    final var currentAngle = Math.round(-armPivotGyro.getRoll() * 100.0) / 100.0; // Get to nearest tenth because we don't need 10 million decimal places.
     final var reachedSetpoint = currentAngle > setpoint.get() - TOLERANCE && currentAngle < setpoint.get() + TOLERANCE;
 
     
@@ -73,7 +73,7 @@ public class WinchSubsystem extends SubsystemBase {
 
     // current: 14
     // previous: 13.8
-    if (currentAngle < (previousAngle - 0.2) || currentAngle > (previousAngle + 0.2)) { // Prevent an issue with the angle being the same I think
+    if (currentAngle < (previousAngle - 1) || currentAngle > (previousAngle + 1) && previousAngle != currentAngle) { // Prevent an issue with the angle being the same I think
       // System.out.println("Debug");
       previousAngle = currentAngle;
     }
@@ -92,7 +92,7 @@ public class WinchSubsystem extends SubsystemBase {
       runWinchesSync(true);  
     } else if (currentAngle < VERTICAL_ANGLE && previousAngle > currentAngle) { // Above the vertical point and approaching towards below the vertical
       System.out.println("Approaching below vertical");
-      // runWinchesSync(false);
+      runWinchesSync(false);
     } else {
       // TODO: need to untighten front to let back drop
       // backWinchMotor.set(BACK_SPEED); // Run back winch normally to drop the arm
@@ -104,7 +104,7 @@ public class WinchSubsystem extends SubsystemBase {
   // range setpoint - 2, setpoint + 2
   private void runWinchesSync(boolean approachingAboveVertical) {    
     frontWinchMotor.set((approachingAboveVertical ? 1.0 : -1.0) * FRONT_SPEED);
-    backWinchMotor.set((approachingAboveVertical ? 1.0 : -1.0) * BACK_SPEED);
+    backWinchMotor.set((approachingAboveVertical ? -1.0 : 1.0) * BACK_SPEED);
   }
 
   public void setSetpoint(double setpoint) {
