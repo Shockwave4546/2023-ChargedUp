@@ -24,21 +24,24 @@ import frc.robot.utils.shuffleboard.ShuffleboardDouble;
  * Roll = angle
  */
 public class WinchSubsystem extends SubsystemBase {
-  private static final double VERTICAL_ANGLE = 25.0;
+  private static final double VERTICAL_ANGLE = 22.0;
+  private static final double BACK_SPEED = 0.22;
+  private static final double FRONT_SPEED = 0.50;
+  private static final double TOLERANCE = 2.0;
+
   private final ShuffleboardTab tab = Shuffleboard.getTab("WinchSubsystem");
   private final CANSparkMax backWinchMotor = new CANSparkMax(BackWinch.MOTOR_ID, MotorType.kBrushless);
-  private final ProfiledPIDController backWinchPID = new ProfiledPIDController(0.1, 0, 0, new Constraints(0.2, 0.2));
+  // private final ProfiledPIDController backWinchPID = new ProfiledPIDController(0.1, 0, 0, new Constraints(0.2, 0.2));
 
   private final CANSparkMax frontWinchMotor = new CANSparkMax(FrontWinch.MOTOR_ID, MotorType.kBrushed);
-  private final ProfiledPIDController frontWinchPID = new ProfiledPIDController(7.0, 0, 0, new Constraints(10.0, 2.0));
+  // private final ProfiledPIDController frontWinchPID = new ProfiledPIDController(7.0, 0, 0, new Constraints(10.0, 2.0));
 
   private final ShuffleboardDouble setpoint = new ShuffleboardDouble(tab, "Angle Setpoint");
   private final AHRS armPivotGyro = new AHRS(SerialPort.Port.kUSB);
   private double previousAngle = 0.0;
 
   public WinchSubsystem() {
-    backWinchPID.setTolerance(2.0);
-    frontWinchPID.setTolerance(2.0);
+    armPivotGyro.calibrate();
     backWinchMotor.setInverted(true);
     resetGyro();
 
@@ -48,55 +51,60 @@ public class WinchSubsystem extends SubsystemBase {
     tab.addNumber("Gyro Pitch", () -> armPivotGyro.getPitch());
     tab.addNumber("Gyro Yaw", () -> armPivotGyro.getYaw());
     tab.addNumber("Gyro Roll", () -> -armPivotGyro.getRoll());
-    tab.add("Back Winch PID", backWinchPID);
-    tab.add("Front Winch PID", frontWinchPID);
     tab.add("Reset Gyro", new InstantCommand(this::resetGyro, this));
     frontWinchMotor.stopMotor();
     backWinchMotor.stopMotor();
+    
   }
 
   @Override public void periodic() {
-    // runWinches(); 
-    // runWinchesSync(false, -armPivotGyro.getRoll());
+    runWinches(); 
   }
 
   private void runWinches() {
-    final var currentAngle = -armPivotGyro.getRoll();
-    if (previousAngle != currentAngle) { // Prevent an issue with the angle being the same I think
-      previousAngle = currentAngle; 
+    final var currentAngle = Math.round(-armPivotGyro.getRoll() * 10.0) / 10.0; // Get to nearest tenth because we don't need 10 million decimal places.
+    final var reachedSetpoint = currentAngle > setpoint.get() - TOLERANCE && currentAngle < setpoint.get() + TOLERANCE;
+
+    
+    // System.out.println("Setpoint: " + setpoint.get());
+    // System.out.println("Range: " + (setpoint.get() - TOLERANCE) + " to " + (setpoint.get() + TOLERANCE));
+    // System.out.println("Reached Setpoint: " + reachedSetpoint);
+    System.out.println(previousAngle + "   " + currentAngle);
+
+    // current: 14
+    // previous: 13.8
+    if (currentAngle < (previousAngle - 0.2) || currentAngle > (previousAngle + 0.2)) { // Prevent an issue with the angle being the same I think
+      // System.out.println("Debug");
+      previousAngle = currentAngle;
     }
 
+    if (reachedSetpoint) {
+      System.out.println("Reached setpoint");
+      frontWinchMotor.stopMotor();
+      backWinchMotor.stopMotor();
+      return;
+    }
+
+    System.out.println(currentAngle < VERTICAL_ANGLE);
+    System.out.println(previousAngle < currentAngle);
     if (currentAngle < VERTICAL_ANGLE && previousAngle < currentAngle) { // Below the vertical point and approaching towards above the vertical
-      runWinchesSync(true, currentAngle);
-    } else if (currentAngle > VERTICAL_ANGLE && previousAngle > currentAngle) { // Above the vertical point and approaching towards below the vertical
-      runWinchesSync(false, currentAngle);
+      System.out.println("Approaching above vertical");
+      runWinchesSync(true);  
+    } else if (currentAngle < VERTICAL_ANGLE && previousAngle > currentAngle) { // Above the vertical point and approaching towards below the vertical
+      System.out.println("Approaching below vertical");
+      // runWinchesSync(false);
     } else {
-      backWinchMotor.setVoltage(backWinchPID.calculate(currentAngle, setpoint.get())); // Run back winch normally to drop the arm
+      // TODO: need to untighten front to let back drop
+      // backWinchMotor.set(BACK_SPEED); // Run back winch normally to drop the arm
     }
-
-    previousAngle = currentAngle;
   }
 
-  private void runWinchesSync(boolean approachingAboveVertical, double currentAngle) {
-    // if (approachingAboveVertical) {
-      frontWinchMotor.setVoltage((approachingAboveVertical ? 1.0 : -1.0) * frontWinchPID.calculate(currentAngle, setpoint.get()));
-      System.out.println(frontWinchPID.atGoal());
-      if (!frontWinchPID.atGoal()) {
-        backWinchMotor.setVoltage((approachingAboveVertical ? -1.0 : 1.0) * backWinchPID.calculate(currentAngle, setpoint.get()));
-      } else {
-        backWinchMotor.stopMotor();
-      }
-    // } else {
-    //   System.out.println(backWinchPID.atSetpoint());
-    //   System.out.println(backWinchPID.getGoal().position);
-    //   System.out.println(currentAngle);
-    //   if (!backWinchPID.atSetpoint()) {
-    //     frontWinchMotor.setVoltage(-frontWinchPID.calculate(currentAngle, setpoint.get()));
-    //   } else {
-    //     frontWinchMotor.stopMotor();
-    //   }
-    //   backWinchMotor.setVoltage(backWinchPID.calculate(currentAngle, setpoint.get()));
-    // }
+  // setpoint: 25 degrees
+  // currentAngle: 23 degrees
+  // range setpoint - 2, setpoint + 2
+  private void runWinchesSync(boolean approachingAboveVertical) {    
+    frontWinchMotor.set((approachingAboveVertical ? 1.0 : -1.0) * FRONT_SPEED);
+    backWinchMotor.set((approachingAboveVertical ? -1.0 : 1.0) * BACK_SPEED);
   }
 
   public void setSetpoint(double setpoint) {
