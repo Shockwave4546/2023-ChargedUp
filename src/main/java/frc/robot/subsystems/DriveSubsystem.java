@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.RobotContainer.PDP;
+// import static frc.robot.RobotContainer.PDP;
 import static frc.robot.utils.Utils.configureVictorSPX;
 import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
@@ -26,6 +26,7 @@ import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.Utils;
+import frc.robot.utils.shuffleboard.DebugMotorCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
 
 /**
@@ -74,10 +75,10 @@ public class DriveSubsystem extends SubsystemBase {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
   
     // TODO: fix channels
-    logDouble("Front Left Motor Current", PDP.getCurrent(14));
-    logDouble("Back Left Motor Current", PDP.getCurrent(13));
-    logDouble("Front Right Motor Current", PDP.getCurrent(15));
-    logDouble("Back Right Motor Current", PDP.getCurrent(12));
+    // logDouble("Front Left Motor Current", PDP.getCurrent(14));
+    // logDouble("Back Left Motor Current", PDP.getCurrent(13));
+    // logDouble("Front Right Motor Current", PDP.getCurrent(15));
+    // logDouble("Back Right Motor Current", PDP.getCurrent(12));
 
     logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
     logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());

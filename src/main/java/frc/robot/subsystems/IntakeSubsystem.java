@@ -26,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeMotor.restoreFactoryDefaults();
 
-    setDefaultCommand(new HoldGamePieceCommand(this));
+    // setDefaultCommand(new HoldGamePieceCommand(this));
     
     new DebugMotorCommand(tab, "Debug Intake", intakeMotor, this);
   }
@@ -59,6 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void releaseGamePiece() {
     setRawSpeed((lastGamePiece == GamePiece.CONE ? 1.0 : -1.0) * Intake.RELEASE_SPEED);
   }
+
 
   /**
    * Note: this should never get called since an abstract override should be utilized instead.

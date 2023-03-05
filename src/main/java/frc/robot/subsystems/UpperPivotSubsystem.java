@@ -23,7 +23,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final ShuffleboardTab tab = Shuffleboard.getTab("UpperPivotSubsystem");
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(Arm.UpperPivot.MOTOR_ID, MotorType.kBrushless));
   private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder(); 
-  private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble("Upper Pivot Angle");
+  private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(Arm.UpperPivot.KA, Arm.UpperPivot.KG, Arm.UpperPivot.KV, Arm.UpperPivot.KS);
 
   /**

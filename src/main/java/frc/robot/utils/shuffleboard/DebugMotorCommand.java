@@ -16,6 +16,17 @@ public class DebugMotorCommand extends CommandBase {
    * @param tab
    * @param name
    * @param motor
+   */
+  public DebugMotorCommand(ShuffleboardTab tab, String name, MotorController motor) {
+    this.motor = motor;
+    this.speed = new ShuffleboardSpeed(tab, name + " Speed");
+    tab.add("Debug " + name + " Motor", this);
+  }
+
+  /**
+   * @param tab
+   * @param name
+   * @param motor
    * @param subsystem
    */
   public DebugMotorCommand(ShuffleboardTab tab, String name, MotorController motor, SubsystemBase subsystem) {
