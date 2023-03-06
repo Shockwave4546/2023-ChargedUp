@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import frc.robot.Constants.Arm;
+import frc.robot.Constants.UpperPivot;
 import frc.robot.utils.shuffleboard.ShuffleboardDouble;
+import frc.robot.utils.telemetry.Telemetry;
 
 import static frc.robot.utils.Utils.configureSparkMax;
 
@@ -21,10 +22,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  */
 public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final ShuffleboardTab tab = Shuffleboard.getTab("UpperPivotSubsystem");
-  private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(Arm.UpperPivot.MOTOR_ID, MotorType.kBrushless));
+  private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
   private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder(); 
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
-  private final ArmFeedforward feedForward = new ArmFeedforward(Arm.UpperPivot.KA, Arm.UpperPivot.KG, Arm.UpperPivot.KV, Arm.UpperPivot.KS);
+  private final ArmFeedforward feedForward = new ArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
 
   /**
    * Initalizes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
@@ -32,15 +33,14 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
    * Configures the encoder's conversion factor to be in degrees.
    */
   public UpperPivotSubsystem() {
-    super(new ProfiledPIDController(Arm.UpperPivot.P, Arm.UpperPivot.I, Arm.UpperPivot.D, new TrapezoidProfile.Constraints(Arm.UpperPivot.MAX_VELOCITY, Arm.UpperPivot.MAX_ACCELERATION)), 0);
-    upperPivotMotor.restoreFactoryDefaults();
-    upperPivotEncoder.setPositionConversionFactor(Arm.POSITION_CONVERSION_FACTOR);
+    super(new ProfiledPIDController(UpperPivot.P, UpperPivot.I, UpperPivot.D, new TrapezoidProfile.Constraints(UpperPivot.MAX_VELOCITY, UpperPivot.MAX_ACCELERATION)), 0);
+    upperPivotEncoder.setPositionConversionFactor(UpperPivot.POSITION_CONVERSION_FACTOR);
     upperPivotEncoder.setPosition(0.0);
     setGoal(0.0);
 
     tab.add("Upper Pivot PID Controller", getController());
     tab.addNumber("Upper Pivot Encoder Position", () -> upperPivotEncoder.getPosition());
-    tab.addNumber("Upper Pivot Applied Voltage", () -> upperPivotMotor.getAppliedOutput());
+    tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
   
@@ -49,6 +49,10 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
    * @see edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem#periodic()
    */
   @Override public void periodic() {
+    Telemetry.logDouble("Setpoint", getController().getGoal().position);
+    Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
+    Telemetry.logDouble("Upper Pivot Motor Output Voltage", upperPivotMotor.getAppliedOutput());
+
     setGoal(upperPivotAngle.get());
     super.periodic();
   }

@@ -60,49 +60,28 @@ public class Constants {
   /**
    * 
    */
-  public static class Arm {
+  public static class UpperPivot {
     private static final float GEAR_RATIO = 125.0F;
     public static final float POSITION_CONVERSION_FACTOR = (1.0F / GEAR_RATIO) * 360.0F;
-
-    /**
-     * 
-     */
-    public static class UpperPivot {
-      public static final int MOTOR_ID = 5;
-      public static final double P = 0.087182;
-      public static final double I = 0.0;
-      public static final double D = 0.0020132;
-      public static final double KS = 0.16466;
-      public static final double KV = 0.042168;
-      public static final double KA = 0.00092383;
-      public static final double KG = 0.12365;
-      public static final double MAX_VELOCITY = 500;
-      public static final double MAX_ACCELERATION = 250;
-    }
+    public static final int MOTOR_ID = 5;
+    public static final double P = 0.087182;
+    public static final double I = 0.0;
+    public static final double D = 0.0020132;
+    public static final double KS = 0.16466;
+    public static final double KV = 0.042168;
+    public static final double KA = 0.00092383;
+    public static final double KG = 0.12365;
+    public static final double MAX_VELOCITY = 500;
+    public static final double MAX_ACCELERATION = 250;
   } 
 
   /**
    * 
    */
-  public static class BackWinch {
+  public static class Winch {
     public static final int MOTOR_ID = 6;
-    public static final float POSITION_CONVERSION_FACTOR = (1.0F / 36.0F) * 360.0F;
-    public static final double P = 1.0;
-    public static final double I = 0.0;
-    public static final double D = 0.0;
-  }
-
-  /**
-   * 
-   */
-  public static class FrontWinch {
-    public static final int MOTOR_ID = 7;
-    public static final double POSITION_CONVERSION_FACTOR = 360.0;
-    public static final double DISTANCE_PER_PULSE =  360.0 / QUAD_ENCODER_PULSES_PER_REVOLUTION;
-    public static final double P = 1.0;
-    public static final double I = 0.0;
-    public static final double D = 0.0;
-    public static final int[] ENCODER = new int[] {4, 5};
+    public static final double DEFAULT_SPEED = 0.30;
+    public static final double SETPOINT_TOLERANCE = 1.0; // degrees
   }
 
   /**

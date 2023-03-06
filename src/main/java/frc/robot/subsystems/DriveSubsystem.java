@@ -1,15 +1,10 @@
 package frc.robot.subsystems;
 
-// import static frc.robot.RobotContainer.PDP;
 import static frc.robot.utils.Utils.configureVictorSPX;
 import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -25,9 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
-import frc.robot.utils.Utils;
-import frc.robot.utils.shuffleboard.DebugMotorCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
+import frc.robot.utils.shuffleboard.ShuffleboardSpeed;
 
 /**
  * Represents the Differential Drive used in the Kit Chassis.
@@ -39,14 +33,16 @@ public class DriveSubsystem extends SubsystemBase {
   private final WPI_VictorSPX backLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
   private final WPI_VictorSPX frontRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.FRONT_RIGHT_ID));
-  private final CANSparkMax backRightMotor = Utils.configureSparkMax(new CANSparkMax(Drive.BACK_RIGHT_ID, MotorType.kBrushed));
+  private final WPI_VictorSPX backRightMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_RIGHT_ID));
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, backRightMotor);
   private final Encoder leftEncoder = new Encoder(Drive.LEFT_ENCODER[0], Drive.LEFT_ENCODER[1]);
   private final Encoder rightEncoder = new Encoder(Drive.RIGHT_ENCODER[0], Drive.RIGHT_ENCODER[1]);
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH_METERS);
-  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0);
+  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
   private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
   private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
+  private final ShuffleboardSpeed leftSpeedMultiplier = new ShuffleboardSpeed(tab, "Left Speed Multiplier", 1.0);
+  private final ShuffleboardSpeed rightpeedMultiplier = new ShuffleboardSpeed(tab, "Right Speed Multiplier", 1.0);
 
   /**
    * Initalizes and configures all the values for Encoders (@see Encoder#setDistancePerPulse) and motors (@see WPI_VictorSPX#setInverted).
@@ -73,17 +69,11 @@ public class DriveSubsystem extends SubsystemBase {
    */
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
-  
-    // TODO: fix channels
-    // logDouble("Front Left Motor Current", PDP.getCurrent(14));
-    // logDouble("Back Left Motor Current", PDP.getCurrent(13));
-    // logDouble("Front Right Motor Current", PDP.getCurrent(15));
-    // logDouble("Back Right Motor Current", PDP.getCurrent(12));
 
-    logDouble("Front Left Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
-    logDouble("Back Left Motor Voltage", backLeftMotor.getMotorOutputVoltage());
-    logDouble("Front Right Motor Voltage", frontRightMotor.getMotorOutputVoltage());
-    logDouble("Back Right Motor Voltage", backRightMotor.getBusVoltage());
+    logDouble("Front Left Output Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
+    logDouble("Back Left Output Motor Voltage", backLeftMotor.getMotorOutputVoltage());
+    logDouble("Front Right Output Motor Voltage", frontRightMotor.getMotorOutputVoltage());
+    logDouble("Back Right Output Motor Voltage", backRightMotor.getMotorOutputVoltage());
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
     logDouble("Gyro Angle", gyro.getAngle());
@@ -107,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rightSpeed [-1.0 to 1.0] the speed of the right side.
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    drive.tankDrive(leftSpeed, rightSpeed);
+    drive.tankDrive(leftSpeed * leftSpeedMultiplier.get(), rightSpeed * rightpeedMultiplier.get());
   }
 
   /**

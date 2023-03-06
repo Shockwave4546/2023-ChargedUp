@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Intake;
-import frc.robot.commands.HoldGamePieceCommand;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
+import frc.robot.utils.telemetry.Telemetry;
 
 /**
  * Represents the intake of our robot, responsible for picking up and releasing of cubes and cones.
@@ -21,14 +21,18 @@ public class IntakeSubsystem extends SubsystemBase {
   private GamePiece lastGamePiece = GamePiece.NOTHING;
 
   /**
-   * Sets the default command to hold the game piece, as otherwise, gravity will slowly make it fall out.
+   * Constructor.
    */
   public IntakeSubsystem() {
-    intakeMotor.restoreFactoryDefaults();
-
-    // setDefaultCommand(new HoldGamePieceCommand(this));
-    
     new DebugMotorCommand(tab, "Debug Intake", intakeMotor, this);
+  }
+
+  /**
+   * Log debugging information.
+   */
+  @Override public void periodic() {
+    Telemetry.logString("Current Game Piece", lastGamePiece.toString());
+    Telemetry.logDouble("Intake Output Motor Voltage", intakeMotor.getAppliedOutput());
   }
 
   /**
