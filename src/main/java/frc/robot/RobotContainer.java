@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -43,10 +45,10 @@ public class RobotContainer {
    * 
    */
   private void configureAuto() {
-    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0));
-    // auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0));
-    // auto.addPath("Mobility", new PathConstraints(3.0, 1.0));
-    // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0));
+    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0), new HashMap<>());
+    // auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0), new HashMap<>());
+    // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), new HashMap<>());
+    // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), new HashMap<>());
   }
 
   /**
