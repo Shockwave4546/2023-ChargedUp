@@ -64,6 +64,17 @@ public class IntakeSubsystem extends SubsystemBase {
     setRawSpeed((lastGamePiece == GamePiece.CONE ? 1.0 : -1.0) * Intake.RELEASE_SPEED);
   }
 
+  /**
+   * Sets what game piece to release first--useful to use in autonomous mode, where a piece is preloaded.
+   * Depending on what game piece is being released, the intake has to either spin forward or backward.
+   * Only one controller button must be mapped for this since during the pick up, the current game piece
+   * will get cached and used in this function.
+   */
+  public void releaseGamePiece(GamePiece piece) {
+    this.lastGamePiece = piece;
+    releaseGamePiece();
+  }
+
 
   /**
    * Note: this should never get called since an abstract override should be utilized instead.

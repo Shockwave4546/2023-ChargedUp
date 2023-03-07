@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.GoToPositionPresetCommand;
+import frc.robot.commands.PickUpGamePieceCommand;
+import frc.robot.commands.ReleaseGamePieceCommand;
+import frc.robot.commands.GoToPositionPresetCommand.PositionPreset;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -47,8 +51,12 @@ public class RobotContainer {
    * 
    */
   private void configureAuto() {
-    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0), Map.of("AutoBalance", new AutoBalanceCommand(drive)));
-    // auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0), Map.of());
+    // auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0), Map.of(
+    //   "GoHighConePosition", new GoToPositionPresetCommand(PositionPreset.HIGH_CONE, upperPivot, winch),
+    //   "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake),
+    //   "AutoBalance", new AutoBalanceCommand(drive)
+    // ));
+    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0), Map.of());
     // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), Map.of());
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());
   }
@@ -57,9 +65,9 @@ public class RobotContainer {
    * 
    */
   private void configureControllers() {
-    operatorController.leftBumper().whileTrue(new FunctionalCommand(() -> {} , () -> { intake.pickUpGamePiece(GamePiece.CONE); } , ($) -> { intake.stop(); } , () -> false , intake));
-    operatorController.rightBumper().whileTrue(new FunctionalCommand(() -> {} , () -> { intake.pickUpGamePiece(GamePiece.CUBE); } , ($) -> { intake.stop(); } , () -> false , intake));
-    operatorController.rightTrigger().whileTrue(new FunctionalCommand(() -> {} , () -> { intake.releaseGamePiece(); } , ($) -> { intake.stop(); } , () -> false , intake));
+    operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake));
+    operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake));
+    operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
 
     // TODO: add static setpoints for each button
