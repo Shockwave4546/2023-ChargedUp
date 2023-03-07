@@ -6,6 +6,8 @@ import java.util.Map;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AutoBalanceCommand;
@@ -56,7 +58,14 @@ public class RobotContainer {
     //   "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake),
     //   "AutoBalance", new AutoBalanceCommand(drive)
     // ));
-    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0), Map.of());
+
+    // auto.addPath("StraightLine3Meters", new PathConstraints(3.0, 1.0), Map.of(
+    //   "Wait3Command", new WaitCommand(3),
+    //   "PrintCommand", new PrintCommand("Start Print Command"),
+    //   "Wait2Command", new WaitCommand(2),
+    //   "EndPrintCommand", new PrintCommand("End Print Command")
+    // ));
+
     // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), Map.of());
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());
   }
