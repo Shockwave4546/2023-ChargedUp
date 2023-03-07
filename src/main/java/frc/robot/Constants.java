@@ -45,6 +45,10 @@ public class Constants {
     // Source: https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#:~:text=public%20static%20final%20double%20kRamseteB,double%20kRamseteZeta%20%3D%200.7%3B
     public static final double RAMSETE_B = 2;
     public static final double RAMSETE_ZETA = 0.7;
+
+    public static final double BALANCE_P = 0.0015;
+    public static final double BALANCE_I = 0.0;
+    public static final double BALANCE_D = 0.0;
   }
 
   /**

@@ -27,7 +27,7 @@ import frc.robot.utils.shuffleboard.ShuffleboardSpeed;
  * Represents the Differential Drive used in the Kit Chassis.
  */
 public class DriveSubsystem extends SubsystemBase {
-  private final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
+  public final ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
   private final AHRS gyro = new AHRS();
   private final WPI_VictorSPX frontLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.FRONT_LEFT_ID));
   private final WPI_VictorSPX backLeftMotor = configureVictorSPX(new WPI_VictorSPX(Drive.BACK_LEFT_ID));
@@ -76,7 +76,16 @@ public class DriveSubsystem extends SubsystemBase {
     logDouble("Back Right Output Motor Voltage", backRightMotor.getMotorOutputVoltage());
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
-    logDouble("Gyro Angle", gyro.getAngle());
+    logDouble("Gyro Angle", getGyroAngle());
+  }
+
+  /**
+   * Returns the angle given by the gyroscope.
+   * 
+   * @return angle of the gyroscope.
+   */
+  public double getGyroAngle() {
+    return gyro.getAngle();
   }
 
   /**
