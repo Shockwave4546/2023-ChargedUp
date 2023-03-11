@@ -28,12 +28,12 @@ import frc.robot.utils.shuffleboard.GlobalTab;
  */
 public class RobotContainer {
   public static final PowerDistribution PDP = new PowerDistribution();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
+  // private final IntakeSubsystem intake = new IntakeSubsystem();
+  // private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   // protected final DriveSubsystem drive = new DriveSubsystem();
   // private final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  private final WinchSubsystem winch = new WinchSubsystem();
+  // private final WinchSubsystem winch = new WinchSubsystem();
   // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
@@ -44,7 +44,7 @@ public class RobotContainer {
     GlobalTab.DEBUG.add("PDP", PDP);
     configureAuto();
     configureControllers();
-    upperPivot.enable();
+    // upperPivot.enable();
   }
 
   /**
@@ -72,9 +72,9 @@ public class RobotContainer {
    * 
    */
   private void configureControllers() {
-    operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
-    operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
-    operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
+    // operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
+    // operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
+    // operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
 
     // TODO: add static setpoints for each button
