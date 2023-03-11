@@ -93,6 +93,6 @@ public class Constants {
    */
   public static class LED {
     public static final int LED_PORT = 0;
-    public static final Color SHOCKWAVE_GREEN = new Color(0, 255, 0);
+    public static final int BUFFER_LENGTH = 120;
   }
 }

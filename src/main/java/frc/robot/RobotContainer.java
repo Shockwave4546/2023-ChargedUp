@@ -33,7 +33,7 @@ public class RobotContainer {
   private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   // protected final DriveSubsystem drive = new DriveSubsystem();
   // private final AutonomousManager auto = new AutonomousManager(drive, true);
-  // private final LEDSubsystem led = new LEDSubsystem();
+  private final LEDSubsystem led = new LEDSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final WinchSubsystem winch = new WinchSubsystem();
   // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
@@ -74,8 +74,8 @@ public class RobotContainer {
    * 
    */
   private void configureControllers() {
-    operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake));
-    operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake));
+    operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
+    operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
     operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
 

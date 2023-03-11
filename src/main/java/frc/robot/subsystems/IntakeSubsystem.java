@@ -36,14 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * The function used in the default command, responsible for keeping the game piece within the intake.
-   */
-  public void holdGamePiece() {
-    if (lastGamePiece == GamePiece.NOTHING) return;
-    setRawSpeed((lastGamePiece == GamePiece.CONE ? -1.0 : 1.0) * Intake.HOLD_SPEED);
-  }
-
-  /**
    * Depending on what game piece is being picked up, the intake has to either spin forward or backward.
    * Corresponding controller buttons must be mapped to handle these two inputs.
    * Additionally, the game piece gets cached to be used in other functions.
