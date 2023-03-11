@@ -19,7 +19,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 import frc.robot.utils.shuffleboard.GlobalTab;
@@ -34,7 +33,6 @@ public class RobotContainer {
   // protected final DriveSubsystem drive = new DriveSubsystem();
   // private final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  private final VisionSubsystem vision = new VisionSubsystem();
   private final WinchSubsystem winch = new WinchSubsystem();
   // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
