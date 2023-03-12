@@ -34,7 +34,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
    */
   public UpperPivotSubsystem() {
     super(new ProfiledPIDController(UpperPivot.P, UpperPivot.I, UpperPivot.D, new TrapezoidProfile.Constraints(UpperPivot.MAX_VELOCITY, UpperPivot.MAX_ACCELERATION)), 0);
-    upperPivotEncoder.setPositionConversionFactor(UpperPivot.POSITION_CONVERSION_FACTOR);
+    upperPivotEncoder.setPositionConversionFactor(-1 * UpperPivot.POSITION_CONVERSION_FACTOR);
     upperPivotEncoder.setPosition(0.0);
     setGoal(0.0);
 
@@ -55,6 +55,13 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
 
     setGoal(upperPivotAngle.get());
     super.periodic();
+  }
+
+  /**
+   * 
+   */
+  public void setRawAngle(double angle) {
+    upperPivotAngle.set(angle);
   }
 
   /**

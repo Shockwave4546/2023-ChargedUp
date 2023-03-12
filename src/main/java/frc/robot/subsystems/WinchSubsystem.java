@@ -24,7 +24,7 @@ public class WinchSubsystem extends SubsystemBase {
   private final ShuffleboardTab tab = Shuffleboard.getTab("WinchSubsystem");
   private final CANSparkMax winchMotor = new CANSparkMax(Winch.MOTOR_ID, MotorType.kBrushless);
   private final ShuffleboardDouble setpoint = new ShuffleboardDouble(tab, "Angle Setpoint");
-  private final AHRS armPivotGyro = new AHRS(SerialPort.Port.kUSB);
+  private final AHRS armPivotGyro = new AHRS(SerialPort.Port.kUSB1);
   private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled");
 
   /**
@@ -56,7 +56,7 @@ public class WinchSubsystem extends SubsystemBase {
       return;
     }
 
-    winchMotor.set((getAngle() > setpoint.get() ? -1.0 : 1.0) * Winch.DEFAULT_SPEED);
+    winchMotor.set((getAngle() > setpoint.get() ? 1.0 : -1.0) * Winch.DEFAULT_SPEED);
   }
 
   /**

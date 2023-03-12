@@ -25,10 +25,10 @@ public class Constants {
     public static final double DISTANCE_PER_PULSE =  (Math.PI * WHEEL_DIAMETER_METERS) / QUAD_ENCODER_PULSES_PER_REVOLUTION;
     public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(24);
 
-    public static final int FRONT_LEFT_ID = 0;
-    public static final int BACK_LEFT_ID = 1;
-    public static final int FRONT_RIGHT_ID = 2;
-    public static final int BACK_RIGHT_ID = 3;
+    public static final int FRONT_LEFT_ID = 2;
+    public static final int BACK_LEFT_ID = 3;
+    public static final int FRONT_RIGHT_ID = 0;
+    public static final int BACK_RIGHT_ID = 1;
     public static final int[] LEFT_ENCODER = new int[] {0, 1};
     public static final int[] RIGHT_ENCODER = new int[] {2, 3};
 
@@ -84,7 +84,7 @@ public class Constants {
    */
   public static class Winch {
     public static final int MOTOR_ID = 6;
-    public static final double DEFAULT_SPEED = 0.30;
+    public static final double DEFAULT_SPEED = 1.00;
     public static final double SETPOINT_TOLERANCE = 1.0; // degrees
   }
 

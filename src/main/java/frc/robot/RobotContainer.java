@@ -3,7 +3,11 @@ package frc.robot;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.text.Position;
+
 import com.pathplanner.lib.PathConstraints;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -27,24 +31,25 @@ import frc.robot.utils.shuffleboard.GlobalTab;
  * 
  */
 public class RobotContainer {
-  public static final PowerDistribution PDP = new PowerDistribution();
-  // private final IntakeSubsystem intake = new IntakeSubsystem();
-  // private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
-  // protected final DriveSubsystem drive = new DriveSubsystem();
+  // public static final PowerDistribution PDP = new PowerDistribution();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
+  protected final DriveSubsystem drive = new DriveSubsystem();
   // private final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  // private final WinchSubsystem winch = new WinchSubsystem();
-  // protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
-  private final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
+  private final WinchSubsystem winch = new WinchSubsystem();
+  protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
+  protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
   /**
    * 
    */
   public RobotContainer() {
-    GlobalTab.DEBUG.add("PDP", PDP);
+    // GlobalTab.DEBUG.add("PDP", PDP);
+    CameraServer.startAutomaticCapture();
     configureAuto();
     configureControllers();
-    // upperPivot.enable();
+    upperPivot.enable();
   }
 
   /**
@@ -72,11 +77,14 @@ public class RobotContainer {
    * 
    */
   private void configureControllers() {
-    // operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
-    // operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
-    // operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
+    operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
+    operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
+    operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
 
+    operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.HIGH_CONE, upperPivot, winch));
+    operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot, winch));
+    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR, upperPivot, winch));
     // TODO: add static setpoints for each button
   }
 } 

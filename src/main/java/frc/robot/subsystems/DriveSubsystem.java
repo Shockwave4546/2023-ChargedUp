@@ -49,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Additionally, all measurement devices are zeroed in the event of previous data stored on them.
    */
   public DriveSubsystem() {
-    rightMotors.setInverted(true);
+    leftMotors.setInverted(true);
 
     leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
