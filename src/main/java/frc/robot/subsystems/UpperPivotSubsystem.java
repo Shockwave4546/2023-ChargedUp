@@ -49,7 +49,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
    * @see edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem#periodic()
    */
   @Override public void periodic() {
-    Telemetry.logDouble("Setpoint", getController().getGoal().position);
+    Telemetry.logDouble("Upper Pivot Setpoint", getController().getGoal().position);
     Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
     Telemetry.logDouble("Upper Pivot Motor Output Voltage", upperPivotMotor.getAppliedOutput());
 

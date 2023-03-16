@@ -85,6 +85,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.HIGH_CONE, upperPivot, winch));
     operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot, winch));
     operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR, upperPivot, winch));
+    operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
     // TODO: add static setpoints for each button
   }
 } 
