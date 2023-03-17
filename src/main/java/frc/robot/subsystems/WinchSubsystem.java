@@ -24,7 +24,7 @@ public class WinchSubsystem extends SubsystemBase {
   private final CANSparkMax winchMotor = new CANSparkMax(Winch.MOTOR_ID, MotorType.kBrushless);
   private final ShuffleboardDouble setpoint = new ShuffleboardDouble(tab, "Angle Setpoint");
   private final AHRS armPivotGyro = new AHRS(SerialPort.Port.kUSB1);
-  private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled");
+  private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled", true);
   private boolean reachedPosition = true;
 
   /**
@@ -32,7 +32,7 @@ public class WinchSubsystem extends SubsystemBase {
    */
   public WinchSubsystem() {
     winchMotor.setInverted(true); 
-    resetGyro();
+    armPivotGyro.calibrate();
 
     new DebugMotorCommand(tab, "Run Winch Motor", winchMotor, this);
     final var gyroLayout = tab.getLayout("Gyro", BuiltInLayouts.kList);

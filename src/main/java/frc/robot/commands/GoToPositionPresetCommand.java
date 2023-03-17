@@ -17,7 +17,7 @@ public class GoToPositionPresetCommand extends InstantCommand {
 
   public enum PositionPreset {
     HUMAN_PLAYER_PICKUP(1.0, 1.0),
-    FLOOR(0.0, 73.0),
+    FLOOR(0.0, 75.0),
     HIGH_CONE(120.0, 27.0),
     MID_CONE(1.0, 1.0),
     HIGH_CUBE(1.0, 1.0),
