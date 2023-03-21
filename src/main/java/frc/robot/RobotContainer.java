@@ -1,24 +1,13 @@
 package frc.robot;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.text.Position;
-
 import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AdjustMaxSpeedCommand;
-import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.GoToPositionPresetCommand;
 import frc.robot.commands.PickUpGamePieceCommand;
 import frc.robot.commands.ReleaseGamePieceCommand;
@@ -28,9 +17,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
-import frc.robot.subsystems.WinchSubsystemCopy;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
-import frc.robot.utils.shuffleboard.GlobalTab;
 
 /**
  * 
@@ -42,9 +29,10 @@ public class RobotContainer {
   protected final DriveSubsystem drive = new DriveSubsystem();
   public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  public final WinchSubsystemCopy winch = new WinchSubsystemCopy();
+  public final WinchSubsystem winch = new WinchSubsystem();
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
+  private final UsbCamera camera = CameraServer.startAutomaticCapture();
 
   /**
    * 
@@ -52,7 +40,8 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setMaxSpeed(0.85);
     // GlobalTab.DEBUG.add("PDP", PDP);
-    CameraServer.startAutomaticCapture();
+    camera.setResolution(1280, 720);
+    camera.setFPS(30);
     configureAuto();
     configureControllers();
     upperPivot.enable();
@@ -98,6 +87,5 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CONE, upperPivot, winch));
     operatorController.povRight().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CUBE, upperPivot, winch));
     operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
-    // TODO: add static setpoints for each button
   }
 } 

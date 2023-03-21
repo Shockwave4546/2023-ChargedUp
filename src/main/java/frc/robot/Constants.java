@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 
 /*
  * 
@@ -32,11 +31,6 @@ public class Constants {
     public static final int[] LEFT_ENCODER = new int[] {0, 1};
     public static final int[] RIGHT_ENCODER = new int[] {2, 3};
 
-    /**
-     * 2/24/23
-     * Note: Gains taken from https://github.com/Shockwave4546/2022_Rapid_React/blob/main/src/main/java/frc/robot/Constants.java (+- 3 inches)
-     * TODO: Needs further testing.
-     */
     public static final double KS_VOLTS = 2.55921;
     public static final double KV_VOLT_SECONDS_PER_METER = 1.0509;
     public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 1.8342;
