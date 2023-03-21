@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LED;
@@ -13,7 +11,6 @@ import frc.robot.commands.DefaultLEDCommand;
  * 
  */
 public class LEDSubsystem extends SubsystemBase {
-  private final ShuffleboardTab tab = Shuffleboard.getTab("LEDSubsystem");
   private final AddressableLED led = new AddressableLED(LED.LED_PORT);
   private final AddressableLEDBuffer buffer = new AddressableLEDBuffer(LED.BUFFER_LENGTH);
   private int rainbowFirstPixelHue;

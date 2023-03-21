@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
    * @see edu.wpi.first.wpilibj.IterativeRobotBase#autonomousInit()
    */
   @Override public void autonomousInit() {
-    // container.auto.executeRoutine();
+    container.auto.executeRoutine();
   }
 
   /* (non-Javadoc)
@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
    * @see edu.wpi.first.wpilibj.IterativeRobotBase#teleopPeriodic()
    */
   @Override public void teleopPeriodic() {
-
+    if (container.operatorController.getLeftY() < -0.1 || container.operatorController.getLeftY() > 0.1) {
+      container.upperPivot.setRawAngle(container.upperPivot.getAngle() - (container.operatorController.getLeftY() / 10));
+    }
   }
 }

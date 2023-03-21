@@ -41,8 +41,6 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
   private final DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
   private final ShuffleboardBoolean useCheesyDrive = new ShuffleboardBoolean(tab, "Use Cheesy Drive?");
-  private final ShuffleboardSpeed leftSpeedMultiplier = new ShuffleboardSpeed(tab, "Left Speed Multiplier", 1.0);
-  private final ShuffleboardSpeed rightpeedMultiplier = new ShuffleboardSpeed(tab, "Right Speed Multiplier", 1.0);
 
   /**
    * Initalizes and configures all the values for Encoders (@see Encoder#setDistancePerPulse) and motors (@see WPI_VictorSPX#setInverted).
@@ -51,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     leftMotors.setInverted(true);
 
-    leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
+    leftEncoder.setDistancePerPulse(-1.0 * Drive.DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
 
     resetEncoders();
@@ -70,10 +68,10 @@ public class DriveSubsystem extends SubsystemBase {
   @Override public void periodic() {
     odometry.update(gyro.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance());
 
-    logDouble("Front Left Output Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
-    logDouble("Back Left Output Motor Voltage", backLeftMotor.getMotorOutputVoltage());
-    logDouble("Front Right Output Motor Voltage", frontRightMotor.getMotorOutputVoltage());
-    logDouble("Back Right Output Motor Voltage", backRightMotor.getMotorOutputVoltage());
+    // logDouble("Front Left Output Motor Voltage", frontLeftMotor.getMotorOutputVoltage());
+    // logDouble("Back Left Output Motor Voltage", backLeftMotor.getMotorOutputVoltage());
+    // logDouble("Front Right Output Motor Voltage", frontRightMotor.getMotorOutputVoltage());
+    // logDouble("Back Right Output Motor Voltage", backRightMotor.getMotorOutputVoltage());
     logDouble("Left Encoder Distance", leftEncoder.getDistance());
     logDouble("Right Encoder Distance", rightEncoder.getDistance());
     logDouble("Gyro Angle", getGyroAngle());
@@ -100,13 +98,20 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
+   * @param maxSpeed
+   */
+  public void setMaxSpeed(double maxSpeed) {
+    drive.setMaxOutput(maxSpeed);
+  }
+
+  /**
    * A typical tank drive function to control the speeds of the left and right side of the drivetrain.
    * 
    * @param leftSpeed [-1.0 to 1.0] the speed of the left side.
    * @param rightSpeed [-1.0 to 1.0] the speed of the right side.
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    drive.tankDrive(leftSpeed * leftSpeedMultiplier.get(), rightSpeed * rightpeedMultiplier.get());
+    drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   /**
@@ -116,8 +121,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rightVolts [-12.0 to 12.0] the voltage applied to the right side motors.
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftMotors.setVoltage(leftVolts);
-    rightMotors.setVoltage(rightVolts);
+    leftMotors.setVoltage(-1 * leftVolts);
+    rightMotors.setVoltage(-1 * rightVolts);
     drive.feed();
   }
 

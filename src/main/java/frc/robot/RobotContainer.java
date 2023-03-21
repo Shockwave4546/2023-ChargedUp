@@ -6,14 +6,18 @@ import java.util.Map;
 import javax.swing.text.Position;
 
 import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
+import frc.robot.commands.AdjustMaxSpeedCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.GoToPositionPresetCommand;
 import frc.robot.commands.PickUpGamePieceCommand;
@@ -24,6 +28,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
+import frc.robot.subsystems.WinchSubsystemCopy;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 import frc.robot.utils.shuffleboard.GlobalTab;
 
@@ -33,11 +38,11 @@ import frc.robot.utils.shuffleboard.GlobalTab;
 public class RobotContainer {
   // public static final PowerDistribution PDP = new PowerDistribution();
   private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
+  public final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   protected final DriveSubsystem drive = new DriveSubsystem();
-  // private final AutonomousManager auto = new AutonomousManager(drive, true);
+  public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  private final WinchSubsystem winch = new WinchSubsystem();
+  public final WinchSubsystemCopy winch = new WinchSubsystemCopy();
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
@@ -45,6 +50,7 @@ public class RobotContainer {
    * 
    */
   public RobotContainer() {
+    drive.setMaxSpeed(0.85);
     // GlobalTab.DEBUG.add("PDP", PDP);
     CameraServer.startAutomaticCapture();
     configureAuto();
@@ -69,7 +75,7 @@ public class RobotContainer {
     //   "EndPrintCommand", new PrintCommand("End Print Command")
     // ));
 
-    // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), Map.of());
+    auto.addPath("Mobility", new PathConstraints(3.0, 1.0), Map.of());
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());
   }
 
@@ -77,14 +83,20 @@ public class RobotContainer {
    * 
    */
   private void configureControllers() {
+    driveController.leftBumper().whileTrue(new AdjustMaxSpeedCommand(0.35, drive));
+
     operatorController.leftBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CONE, intake, led));
     operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
     operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
-
     operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.HIGH_CONE, upperPivot, winch));
     operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot, winch));
-    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR, upperPivot, winch));
+    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CONE, upperPivot, winch));
+    operatorController.y().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CUBE, upperPivot, winch));
+
+    operatorController.povLeft().onTrue(new GoToPositionPresetCommand(PositionPreset.CUBE, upperPivot, winch));
+    operatorController.povUp().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CONE, upperPivot, winch));
+    operatorController.povRight().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CUBE, upperPivot, winch));
     operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
     // TODO: add static setpoints for each button
   }

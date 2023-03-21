@@ -37,10 +37,10 @@ public class Constants {
      * Note: Gains taken from https://github.com/Shockwave4546/2022_Rapid_React/blob/main/src/main/java/frc/robot/Constants.java (+- 3 inches)
      * TODO: Needs further testing.
      */
-    public static final double KS_VOLTS = 1.24;
-    public static final double KV_VOLT_SECONDS_PER_METER = 2.9;
-    public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 1.1;
-    public static final double P_DRIVE_VELOCITY = 1.5;
+    public static final double KS_VOLTS = 2.55921;
+    public static final double KV_VOLT_SECONDS_PER_METER = 1.0509;
+    public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 1.8342;
+    public static final double P_DRIVE_VELOCITY = 0.1509;
     
     // Source: https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#:~:text=public%20static%20final%20double%20kRamseteB,double%20kRamseteZeta%20%3D%200.7%3B
     public static final double RAMSETE_B = 2;
@@ -65,7 +65,7 @@ public class Constants {
    * 
    */
   public static class UpperPivot {
-    private static final float GEAR_RATIO = 125.0F;
+    private static final float GEAR_RATIO = 1.0F;
     public static final float POSITION_CONVERSION_FACTOR = (1.0F / GEAR_RATIO) * 360.0F;
     public static final int MOTOR_ID = 5;
     public static final double P = 0.087182;
@@ -75,8 +75,8 @@ public class Constants {
     public static final double KV = 0.042168;
     public static final double KA = 0.00092383;
     public static final double KG = 0.12365;
-    public static final double MAX_VELOCITY = 500;
-    public static final double MAX_ACCELERATION = 250;
+    public static final double MAX_VELOCITY = 250;
+    public static final double MAX_ACCELERATION = 125;
   } 
 
   /**

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.UpperPivot;
+import frc.robot.utils.shuffleboard.DebugMotorCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardDouble;
 import frc.robot.utils.telemetry.Telemetry;
 
@@ -9,6 +10,7 @@ import static frc.robot.utils.Utils.configureSparkMax;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -23,7 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final ShuffleboardTab tab = Shuffleboard.getTab("UpperPivotSubsystem");
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
-  private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder(); 
+  private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder();
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
 
@@ -37,10 +39,11 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
     upperPivotEncoder.setPositionConversionFactor(-1 * UpperPivot.POSITION_CONVERSION_FACTOR);
     upperPivotEncoder.setPosition(0.0);
     setGoal(0.0);
+    new DebugMotorCommand(tab, "Upper Pivot", upperPivotMotor);
 
     tab.add("Upper Pivot PID Controller", getController());
     tab.addNumber("Upper Pivot Encoder Position", () -> upperPivotEncoder.getPosition());
-    tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
+    // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
   
@@ -51,17 +54,30 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   @Override public void periodic() {
     Telemetry.logDouble("Upper Pivot Setpoint", getController().getGoal().position);
     Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
-    Telemetry.logDouble("Upper Pivot Motor Output Voltage", upperPivotMotor.getAppliedOutput());
+    // Telemetry.logDouble("Upper Pivot Motor Output Voltage", upperPivotMotor.getAppliedOutput());
 
     setGoal(upperPivotAngle.get());
     super.periodic();
   }
 
   /**
+   * @return
+   */
+  public double getAngle() {
+    return upperPivotAngle.get();
+  }
+
+  /**
    * 
    */
   public void setRawAngle(double angle) {
-    upperPivotAngle.set(angle);
+    if (angle >= 120) {
+      upperPivotAngle.set(120);
+    } else if (angle < 0) {
+      upperPivotAngle.set(0);
+    } else {
+      upperPivotAngle.set(angle);
+    }
   }
 
   /**
