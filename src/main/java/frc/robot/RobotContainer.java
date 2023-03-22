@@ -30,7 +30,6 @@ public class RobotContainer {
   public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
   public final WinchSubsystem winch = new WinchSubsystem();
-  public final WinchSubsystem winch = new WinchSubsystem();
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
   private final UsbCamera camera = CameraServer.startAutomaticCapture();
