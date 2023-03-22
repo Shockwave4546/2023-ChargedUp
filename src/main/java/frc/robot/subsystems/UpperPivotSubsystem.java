@@ -10,7 +10,6 @@ import static frc.robot.utils.Utils.configureSparkMax;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -54,7 +53,6 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   @Override public void periodic() {
     Telemetry.logDouble("Upper Pivot Setpoint", getController().getGoal().position);
     Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
-    // Telemetry.logDouble("Upper Pivot Motor Output Voltage", upperPivotMotor.getAppliedOutput());
 
     setGoal(upperPivotAngle.get());
     super.periodic();

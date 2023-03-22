@@ -32,7 +32,6 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   @Override public void periodic() {
     Telemetry.logString("Current Game Piece", lastGamePiece.toString());
-    // Telemetry.logDouble("Intake Output Motor Voltage", intakeMotor.getAppliedOutput());
   }
 
   /**

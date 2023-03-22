@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 
 /*
  * 

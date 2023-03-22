@@ -1,36 +1,24 @@
 package frc.robot;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.text.Position;
 
 import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AdjustMaxSpeedCommand;
-import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.AutoGoToPositionPresetCommand;
 import frc.robot.commands.GoToPositionPresetCommand;
 import frc.robot.commands.PickUpGamePieceCommand;
 import frc.robot.commands.ReleaseGamePieceCommand;
-import frc.robot.commands.GoToPositionPresetCommand.PositionPreset;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.UpperPivotSubsystem;
 import frc.robot.subsystems.WinchSubsystem;
-import frc.robot.subsystems.WinchSubsystemCopy;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
-import frc.robot.utils.shuffleboard.GlobalTab;
 
 /**
  * 
@@ -42,7 +30,7 @@ public class RobotContainer {
   protected final DriveSubsystem drive = new DriveSubsystem();
   public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
-  public final WinchSubsystemCopy winch = new WinchSubsystemCopy();
+  public final WinchSubsystem winch = new WinchSubsystem();
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
 
@@ -75,7 +63,12 @@ public class RobotContainer {
     //   "EndPrintCommand", new PrintCommand("End Print Command")
     // ));
 
-    auto.addPath("Mobility", new PathConstraints(3.0, 1.0), Map.of());
+    // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), false, Map.of());
+    auto.addPath("OnePiece", new PathConstraints(3.0, 1.0), true, Map.of(
+      "HighConePosition", new AutoGoToPositionPresetCommand(PositionPreset.HIGH_CONE, true, false, upperPivot, winch)
+        .andThen(new AutoGoToPositionPresetCommand(PositionPreset.HIGH_CONE, false, true, upperPivot, winch)),
+      "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake)
+    ));
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());
   }
 

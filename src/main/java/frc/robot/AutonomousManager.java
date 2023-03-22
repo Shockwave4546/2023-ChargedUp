@@ -37,8 +37,8 @@ public class AutonomousManager {
   /**
    * @param pathName
    */
-  public void addPath(String pathName, PathConstraints constraints, Map<String, Command> eventMap) {
-    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, constraints, eventMap));
+  public void addPath(String pathName, PathConstraints constraints, boolean reversed, Map<String, Command> eventMap) {
+    chooser.addOption(pathName, loadPathPlannerTrajectoryToRamseteCommand(pathName, constraints, reversed, eventMap));
   }
 
   /**
@@ -54,8 +54,8 @@ public class AutonomousManager {
    * @param eventMap
    * @return
    */
-  private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, PathConstraints constraints, Map<String, Command> eventMap) {
-    final var path = PathPlanner.loadPath(fileName, constraints);
+  private Command loadPathPlannerTrajectoryToRamseteCommand(String fileName, PathConstraints constraints, boolean reversed, Map<String, Command> eventMap) {
+    final var path = PathPlanner.loadPath(fileName, constraints, reversed);
     final var autoBuilder = new RamseteAutoBuilder(
       drive::getPose, 
       drive::resetOdometry, 

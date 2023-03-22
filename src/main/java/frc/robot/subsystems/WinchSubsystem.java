@@ -1,11 +1,9 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,7 +21,7 @@ public class WinchSubsystem extends SubsystemBase {
   private final ShuffleboardTab tab = Shuffleboard.getTab("WinchSubsystem");
   private final CANSparkMax winchMotor = new CANSparkMax(Winch.MOTOR_ID, MotorType.kBrushless);
   private final ShuffleboardDouble setpoint = new ShuffleboardDouble(tab, "Angle Setpoint");
-  private final AHRS armPivotGyro = new AHRS(SerialPort.Port.kUSB1);
+  private final Encoder encoder = new Encoder(5, 6);
   private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled", true);
   private boolean reachedPosition = true;
 
@@ -32,14 +30,14 @@ public class WinchSubsystem extends SubsystemBase {
    */
   public WinchSubsystem() {
     winchMotor.setInverted(true); 
-    armPivotGyro.calibrate();
+
+    encoder.setDistancePerPulse(360.0 / 2048.0);
+    resetEncoder();
 
     new DebugMotorCommand(tab, "Run Winch Motor", winchMotor, this);
-    final var gyroLayout = tab.getLayout("Gyro", BuiltInLayouts.kList);
-    gyroLayout.addNumber("Gyro Pitch", armPivotGyro::getPitch);
-    gyroLayout.addNumber("Gyro Yaw", armPivotGyro::getYaw);
-    gyroLayout.addNumber("Gyro Roll", this::getAngle);
+    tab.addNumber("Encoder Angle", () -> { return encoder.getDistance(); });
     tab.add("Apply Angle", new InstantCommand(() -> { setAngle(setpoint.get()); } ));
+    tab.add("Reset Winch Encoder", new InstantCommand(this::resetEncoder, this));
     stop();
   }
 
@@ -47,10 +45,6 @@ public class WinchSubsystem extends SubsystemBase {
    * 
    */
   @Override public void periodic() {
-    Telemetry.logDouble("Gyro Pitch", armPivotGyro.getPitch());
-    Telemetry.logDouble("Gyro Yaw", armPivotGyro.getYaw());
-    Telemetry.logDouble("Gyro Roll (Angle)", getAngle());
-    // Telemetry.logDouble("Winch Motor Output Voltage", winchMotor.getAppliedOutput());
     Telemetry.logDouble("Winch Setpoint", setpoint.get());
 
     if (!enabled.get() || atSetpoint() || reachedPosition) {
@@ -73,7 +67,11 @@ public class WinchSubsystem extends SubsystemBase {
    * @return
    */
   public double getAngle() {
-    return Math.round(-armPivotGyro.getRoll() * 100.0) / 100.0;
+    return encoder.getDistance();
+  }
+
+  public void resetEncoder() {
+    encoder.reset();
   }
 
   /**
