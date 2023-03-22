@@ -36,6 +36,7 @@ public class WinchSubsystem extends SubsystemBase {
 
     new DebugMotorCommand(tab, "Run Winch Motor", winchMotor, this);
     tab.addNumber("Encoder Angle", () -> { return encoder.getDistance(); });
+    tab.addNumber("Encoder Angle", () -> {return encoder.getDistance(); });
     tab.add("Apply Angle", new InstantCommand(() -> { setAngle(setpoint.get()); } ));
     tab.add("Reset Winch Encoder", new InstantCommand(this::resetEncoder, this));
     stop();
@@ -45,6 +46,7 @@ public class WinchSubsystem extends SubsystemBase {
    * 
    */
   @Override public void periodic() {
+    // Telemetry.logDouble("Winch Motor Output Voltage", winchMotor.getAppliedOutput());
     Telemetry.logDouble("Winch Setpoint", setpoint.get());
 
     if (!enabled.get() || atSetpoint() || reachedPosition) {

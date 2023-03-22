@@ -2,10 +2,9 @@ package frc.robot;
 
 import java.util.Map;
 
-import javax.swing.text.Position;
-
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AdjustMaxSpeedCommand;
@@ -31,8 +30,10 @@ public class RobotContainer {
   public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();
   public final WinchSubsystem winch = new WinchSubsystem();
+  public final WinchSubsystem winch = new WinchSubsystem();
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
+  private final UsbCamera camera = CameraServer.startAutomaticCapture();
 
   /**
    * 
@@ -40,7 +41,8 @@ public class RobotContainer {
   public RobotContainer() {
     drive.setMaxSpeed(0.85);
     // GlobalTab.DEBUG.add("PDP", PDP);
-    CameraServer.startAutomaticCapture();
+    camera.setResolution(1280, 720);
+    camera.setFPS(30);
     configureAuto();
     configureControllers();
     upperPivot.enable();
@@ -91,6 +93,5 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CONE, upperPivot, winch));
     operatorController.povRight().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CUBE, upperPivot, winch));
     operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
-    // TODO: add static setpoints for each button
   }
 } 
