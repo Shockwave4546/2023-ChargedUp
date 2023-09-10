@@ -34,9 +34,11 @@ public class WinchSubsystem extends SubsystemBase {
     encoder.setDistancePerPulse(360.0 / 2048.0);
     resetEncoder();
 
+    winchMotor.setSmartCurrentLimit(40);
+
     new DebugMotorCommand(tab, "Run Winch Motor", winchMotor, this);
-    tab.addNumber("Encoder Angle", () -> { return encoder.getDistance(); });
-    tab.addNumber("Encoder Angle", () -> {return encoder.getDistance(); });
+    tab.addNumber("Encoder Angle", encoder::getDistance);
+    tab.addNumber("Encoder Angle", encoder::getDistance);
     tab.add("Apply Angle", new InstantCommand(() -> { setAngle(setpoint.get()); } ));
     tab.add("Reset Winch Encoder", new InstantCommand(this::resetEncoder, this));
     stop();

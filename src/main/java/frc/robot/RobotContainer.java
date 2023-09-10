@@ -5,6 +5,8 @@ import java.util.Map;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.AdjustMaxSpeedCommand;
@@ -33,6 +35,10 @@ public class RobotContainer {
   protected final CommandXboxController driveController = new CommandXboxController(IO.DRIVE_CONTROLLER_PORT);
   protected final CommandXboxController operatorController = new CommandXboxController(IO.OPERATOR_CONTROLLER_PORT);
   private final UsbCamera camera = CameraServer.startAutomaticCapture();
+
+  public static ShuffleboardTab tab(String name) {
+    return Shuffleboard.getTab(name);
+  }
 
   /**
    * 

@@ -1,35 +1,33 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.UpperPivot;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardDouble;
 import frc.robot.utils.telemetry.Telemetry;
 
+import static frc.robot.RobotContainer.tab;
 import static frc.robot.utils.Utils.configureSparkMax;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * Represents the upper arm responsible for carrying the intake to set angles.
  */
 public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
-  private final ShuffleboardTab tab = Shuffleboard.getTab("UpperPivotSubsystem");
+  private final ShuffleboardTab tab = tab("UpperPivot");
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
   private final RelativeEncoder upperPivotEncoder = upperPivotMotor.getEncoder();
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
   private final ArmFeedforward feedForward = new ArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
 
   /**
-   * Initalizes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
+   * Initializes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
    * Zeros all the encoders and setpoints in the event of previous data stored on them.
    * Configures the encoder's conversion factor to be in degrees.
    */
@@ -37,15 +35,17 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
     super(new ProfiledPIDController(UpperPivot.P, UpperPivot.I, UpperPivot.D, new TrapezoidProfile.Constraints(UpperPivot.MAX_VELOCITY, UpperPivot.MAX_ACCELERATION)), 0);
     upperPivotEncoder.setPositionConversionFactor(-1 * UpperPivot.POSITION_CONVERSION_FACTOR);
     upperPivotEncoder.setPosition(0.0);
+
+    upperPivotMotor.setSmartCurrentLimit(40);
+
     setGoal(0.0);
     new DebugMotorCommand(tab, "Upper Pivot", upperPivotMotor);
 
     tab.add("Upper Pivot PID Controller", getController());
-    tab.addNumber("Upper Pivot Encoder Position", () -> upperPivotEncoder.getPosition());
+    tab.addNumber("Upper Pivot Encoder Position", upperPivotEncoder::getPosition);
     // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
-  
   /**
    * Although, in reality, this function isn't necessary, for debugging, it's important to be able to quickly set the setpoint (angle) of the pivot.
    * @see edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem#periodic()
@@ -66,7 +66,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   }
 
   /**
-   * 
+   *
    */
   public void setRawAngle(double angle) {
     if (angle >= 120) {
@@ -87,9 +87,9 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
     upperPivotMotor.setVoltage(output + feedForward.calculate(setpoint.position, setpoint.velocity));
   }
 
-  /** 
+  /**
    * Returns the angle of the upper pivot.
-   * 
+   *
    * @return the angle of the upper pivot in degrees.
    */
   @Override public double getMeasurement() {
@@ -99,7 +99,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   /**
    * Zeros the angle reading of the encoder.
    */
-  public void resetPosition() { 
+  public void resetPosition() {
     upperPivotEncoder.setPosition(0.0);
   }
 }

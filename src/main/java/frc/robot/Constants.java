@@ -21,7 +21,7 @@ public class Constants {
    */
   public static class Drive {
     private static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6);
-    public static final double DISTANCE_PER_PULSE =  (Math.PI * WHEEL_DIAMETER_METERS) / QUAD_ENCODER_PULSES_PER_REVOLUTION;
+    public static final double DISTANCE_PER_PULSE = (Math.PI * WHEEL_DIAMETER_METERS) / QUAD_ENCODER_PULSES_PER_REVOLUTION;
     public static final double TRACK_WIDTH_METERS = Units.inchesToMeters(24);
 
     public static final int FRONT_LEFT_ID = 2;
@@ -59,7 +59,7 @@ public class Constants {
    * 
    */
   public static class UpperPivot {
-    private static final float GEAR_RATIO = 1.0F;
+    private static final float GEAR_RATIO = 75.0F;
     public static final float POSITION_CONVERSION_FACTOR = (1.0F / GEAR_RATIO) * 360.0F;
     public static final int MOTOR_ID = 5;
     public static final double P = 0.087182;

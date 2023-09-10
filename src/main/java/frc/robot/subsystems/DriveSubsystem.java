@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.utils.Utils.configureVictorSPX;
 import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;

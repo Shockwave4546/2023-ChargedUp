@@ -25,6 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public IntakeSubsystem() {
     new DebugMotorCommand(tab, "Debug Intake", intakeMotor, this);
+    intakeMotor.setSmartCurrentLimit(20);
   }
 
   /**
