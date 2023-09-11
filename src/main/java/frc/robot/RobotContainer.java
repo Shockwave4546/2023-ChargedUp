@@ -50,7 +50,6 @@ public class RobotContainer {
     camera.setFPS(30);
     configureAuto();
     configureControllers();
-    upperPivot.enable();
   }
 
   /**
