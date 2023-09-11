@@ -59,8 +59,8 @@ public class Constants {
    * 
    */
   public static class UpperPivot {
-    private static final float GEAR_RATIO = 75.0F;
-    public static final float POSITION_CONVERSION_FACTOR = (1.0F / GEAR_RATIO) * 360.0F;
+    private static final float GEAR_RATIO = 1.0F;
+    public static final float POSITION_CONVERSION_FACTOR = 360.0F;
     public static final int MOTOR_ID = 5;
     public static final double P = 0.087182;
     public static final double I = 0.0;

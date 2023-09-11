@@ -40,17 +40,23 @@ public class UpperPivotSubsystem extends SubsystemBase {
    * Configures the encoder's conversion factor to be in degrees.
    */
   public UpperPivotSubsystem() {
-    upperPivotEncoder.setPositionConversionFactor(-1 * UpperPivot.POSITION_CONVERSION_FACTOR);
+    upperPivotEncoder.setPositionConversionFactor(360.0);
     upperPivotEncoder.setPosition(0.0);
+
+    pidController.setFeedbackDevice(upperPivotEncoder);
+
+    upperPivotMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     upperPivotMotor.setSmartCurrentLimit(40);
 
     setReference(0.0);
     new DebugMotorCommand(tab, "Upper Pivot", upperPivotMotor);
 
-    tab.add("Upper Pivot PID Controller", pidController);
+    tab.addNumber("Abcdef", upperPivotEncoder::getPositionConversionFactor);
     tab.addNumber("Upper Pivot Encoder Position", upperPivotEncoder::getPosition);
     // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
+
+    upperPivotMotor.burnFlash();
   }
 
   /**
@@ -61,16 +67,16 @@ public class UpperPivotSubsystem extends SubsystemBase {
     Telemetry.logDouble("Upper Pivot Setpoint", upperPivotAngle.get());
     Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
 
-    if (P.get() != pidController.getP()) pidController.setP(P.get(), SPARK_MAX_SLOT_ID);
-    if (I.get() != pidController.getI()) pidController.setI(I.get(), SPARK_MAX_SLOT_ID);
-    if (D.get() != pidController.getD()) pidController.setP(D.get(), SPARK_MAX_SLOT_ID);
-    if (FF.get() != pidController.getFF()) pidController.setFF(FF.get(), SPARK_MAX_SLOT_ID);
+//    if (P.get() != pidController.getP()) pidController.setP((float) P.get(), SPARK_MAX_SLOT_ID);
+//    if (I.get() != pidController.getI()) pidController.setI((float) I.get(), SPARK_MAX_SLOT_ID);
+//    if (D.get() != pidController.getD()) pidController.setP((float) D.get(), SPARK_MAX_SLOT_ID);
+//    if (FF.get() != pidController.getFF()) pidController.setFF((float) FF.get(), SPARK_MAX_SLOT_ID);
 //    pidController.setSmartMotionMaxVelocity(0.0, SPARK_MAX_SLOT_ID);
 //    pidController.setSmartMotionMaxAccel(0.0, SPARK_MAX_SLOT_ID);
 
-    upperPivotMotor.burnFlash();
+//    upperPivotMotor.burnFlash();
 
-    setReference(upperPivotAngle.get());
+    setReference((float) upperPivotAngle.get());
   }
 
   public void setReference(double angle) {
