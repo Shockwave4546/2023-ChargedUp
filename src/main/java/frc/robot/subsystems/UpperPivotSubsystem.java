@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UpperPivot;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
-import frc.robot.utils.shuffleboard.ShuffleboardDouble;
+import frc.robot.utils.shuffleboard.ShuffleboardFloat;
 import frc.robot.utils.telemetry.Telemetry;
 
 import static frc.robot.RobotContainer.tab;
@@ -25,15 +25,18 @@ public class UpperPivotSubsystem extends SubsystemBase {
 
   private final ShuffleboardTab tab = tab("UpperPivot");
 
-  private final ShuffleboardDouble P = new ShuffleboardDouble(tab, "P", 1.0);
-  private final ShuffleboardDouble I = new ShuffleboardDouble(tab, "I", 0.0);
-  private final ShuffleboardDouble D = new ShuffleboardDouble(tab, "D", 0.0);
-  private final ShuffleboardDouble FF = new ShuffleboardDouble(tab, "FF", 0.0);
+  /**
+   * SparkMax doubles are all represented as float32s.
+   */
+  private final ShuffleboardFloat P = new ShuffleboardFloat(tab, "P", 1.0F);
+  private final ShuffleboardFloat I = new ShuffleboardFloat(tab, "I", 0.0F);
+  private final ShuffleboardFloat D = new ShuffleboardFloat(tab, "D", 0.0F);
+  private final ShuffleboardFloat FF = new ShuffleboardFloat(tab, "FF", 0.0F);
 
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
   public final SparkMaxPIDController pidController = upperPivotMotor.getPIDController();
   public final RelativeEncoder upperPivotEncoder = upperPivotMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8092);
-  public final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
+  public final ShuffleboardFloat upperPivotAngle = new ShuffleboardFloat(tab, "Upper Pivot Angle");
   /**
    * Initializes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
    * Zeros all the encoders and setpoints in the event of previous data stored on them.
@@ -55,8 +58,6 @@ public class UpperPivotSubsystem extends SubsystemBase {
     tab.addNumber("Abcdef", upperPivotEncoder::getPositionConversionFactor);
     tab.addNumber("Upper Pivot Encoder Position", upperPivotEncoder::getPosition);
     // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
-
-    upperPivotMotor.burnFlash();
   }
 
   /**
@@ -67,26 +68,24 @@ public class UpperPivotSubsystem extends SubsystemBase {
     Telemetry.logDouble("Upper Pivot Setpoint", upperPivotAngle.get());
     Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
 
-//    if (P.get() != pidController.getP()) pidController.setP((float) P.get(), SPARK_MAX_SLOT_ID);
-//    if (I.get() != pidController.getI()) pidController.setI((float) I.get(), SPARK_MAX_SLOT_ID);
-//    if (D.get() != pidController.getD()) pidController.setP((float) D.get(), SPARK_MAX_SLOT_ID);
-//    if (FF.get() != pidController.getFF()) pidController.setFF((float) FF.get(), SPARK_MAX_SLOT_ID);
+    if (P.get() != pidController.getP()) pidController.setP(P.get(), SPARK_MAX_SLOT_ID);
+    if (I.get() != pidController.getI()) pidController.setI(I.get(), SPARK_MAX_SLOT_ID);
+    if (D.get() != pidController.getD()) pidController.setP(D.get(), SPARK_MAX_SLOT_ID);
+    if (FF.get() != pidController.getFF()) pidController.setFF(FF.get(), SPARK_MAX_SLOT_ID);
 //    pidController.setSmartMotionMaxVelocity(0.0, SPARK_MAX_SLOT_ID);
 //    pidController.setSmartMotionMaxAccel(0.0, SPARK_MAX_SLOT_ID);
-
-//    upperPivotMotor.burnFlash();
 
     setReference((float) upperPivotAngle.get());
   }
 
   public void setReference(double angle) {
-    pidController.setReference(angle, CANSparkMax.ControlType.kSmartMotion);
+    pidController.setReference(angle, CANSparkMax.ControlType.kPosition);
   }
 
   /**
    * @return
    */
-  public double getAngle() {
+  public float getAngle() {
     return upperPivotAngle.get();
   }
 
