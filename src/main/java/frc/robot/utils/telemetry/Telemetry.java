@@ -1,15 +1,10 @@
 package frc.robot.utils.telemetry;
 
+import edu.wpi.first.util.datalog.*;
+import edu.wpi.first.wpilibj.DataLogManager;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import edu.wpi.first.util.datalog.BooleanLogEntry;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DataLogEntry;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.IntegerLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 
 /**
  * 

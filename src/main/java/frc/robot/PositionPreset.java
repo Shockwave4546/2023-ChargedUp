@@ -11,10 +11,10 @@ public enum PositionPreset {
   STARTING(0.0F, 0.0F),
   DRIVING(60.0F, 0.0F);
   
-  public final float upperPivotAngle;
-  public final float winchAngle;
+  public final double upperPivotAngle;
+  public final double winchAngle;
 
-  PositionPreset(float upperPivotAngle, float winchAngle) {
+  PositionPreset(double upperPivotAngle, double winchAngle) {
     this.upperPivotAngle = upperPivotAngle;
     this.winchAngle = winchAngle;
   }

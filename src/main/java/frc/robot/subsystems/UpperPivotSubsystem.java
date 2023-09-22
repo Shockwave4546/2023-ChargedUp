@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -23,7 +22,7 @@ import static frc.robot.utils.Utils.configureSparkMax;
  * Represents the upper arm responsible for carrying the intake to set angles.
  */
 public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
-  private static final EncoderConversionFactor DEGREES = new EncoderConversionFactor(EncoderConversionFactor.ConversionType.RADIANS);
+  private static final EncoderConversionFactor RADIANS = new EncoderConversionFactor(EncoderConversionFactor.ConversionType.RADIANS);
   private final ShuffleboardTab tab = tab("UpperPivot");
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
   private final Encoder upperPivotEncoder = new Encoder(UpperPivot.ENCODER[0], UpperPivot.ENCODER[1]);
@@ -37,7 +36,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
    */
   public UpperPivotSubsystem() {
     super(new ProfiledPIDController(UpperPivot.P, UpperPivot.I, UpperPivot.D, new TrapezoidProfile.Constraints(UpperPivot.MAX_VELOCITY, UpperPivot.MAX_ACCELERATION)), 0);
-    DEGREES.applyTo(upperPivotEncoder);
+    RADIANS.applyTo(upperPivotEncoder);
     resetPosition();
 
     upperPivotMotor.setSmartCurrentLimit(40);

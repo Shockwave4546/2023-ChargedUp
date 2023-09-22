@@ -3,8 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
+import frc.robot.subsystems.LEDSubsystem;
 
 public class PickUpGamePieceCommand extends CommandBase {
   private final GamePiece piece;

@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.util.Map;
-
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -9,17 +7,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
-import frc.robot.commands.AdjustMaxSpeedCommand;
-import frc.robot.commands.AutoGoToPositionPresetCommand;
-import frc.robot.commands.GoToPositionPresetCommand;
-import frc.robot.commands.PickUpGamePieceCommand;
-import frc.robot.commands.ReleaseGamePieceCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.UpperPivotSubsystem;
-import frc.robot.subsystems.WinchSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
+
+import java.util.Map;
 
 /**
  * 

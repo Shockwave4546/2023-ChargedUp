@@ -28,16 +28,14 @@ public class AutoGoToPositionPresetCommand extends CommandBase {
   }
 
   @Override public boolean isFinished() {
-    return true;
+    if (runWinch && runUpperPivot) {
+      return winch.atSetpoint() && upperPivot.getController().atSetpoint();
+    } else if (runWinch) {
+      return winch.atSetpoint();
+    } else if (runUpperPivot) {
+      return upperPivot.getController().atSetpoint();
+    } else {
+      throw new UnsupportedOperationException("??????????????????");
+    }
   }
-//    if (runWinch && runUpperPivot) {
-//      return winch.atSetpoint() && true; // (upperPivot.upperPivotEncoder.getPosition() == upperPivot.upperPivotAngle.get());
-//    } else if (runWinch) {
-//      return winch.atSetpoint();
-//    } else if (runUpperPivot) {
-//      return (upperPivot.upperPivotEncoder.getPosition() == upperPivot.upperPivotAngle.get());
-//    } else {
-//      throw new UnsupportedOperationException("??????????????????");
-//    }
-//  }
 }

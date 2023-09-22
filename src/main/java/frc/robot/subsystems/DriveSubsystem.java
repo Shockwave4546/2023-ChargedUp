@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import static frc.robot.utils.Utils.configureVictorSPX;
-import static frc.robot.utils.telemetry.Telemetry.logDouble;
-
-import com.ctre.phoenix.motorcontrol.can.VictorSPXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +18,9 @@ import frc.robot.Constants.Drive;
 import frc.robot.commands.CheesyDriveCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardBoolean;
+
+import static frc.robot.utils.Utils.configureVictorSPX;
+import static frc.robot.utils.telemetry.Telemetry.logDouble;
 
 /**
  * Represents the Differential Drive used in the Kit Chassis.

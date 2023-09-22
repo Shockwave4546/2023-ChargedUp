@@ -1,13 +1,10 @@
 package frc.robot;
 
-import java.util.Map;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Drive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.shuffleboard.GlobalTab;
+
+import java.util.Map;
 
 /**
  * 
