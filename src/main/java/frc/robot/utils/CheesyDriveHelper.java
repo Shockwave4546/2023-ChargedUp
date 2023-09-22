@@ -3,7 +3,7 @@ package frc.robot.utils;
 import edu.wpi.first.math.Pair;
 
 /**
- * Source: https://github.com/Team254/FRC-2016-Public/blob/811d5e11867ef7c659f98e01f48e3720d8724df1/src/com/team254/frc2016/CheesyDriveHelper.java
+ * Source: <a href="https://github.com/Team254/FRC-2016-Public/blob/811d5e11867ef7c659f98e01f48e3720d8724df1/src/com/team254/frc2016/CheesyDriveHelper.java">...</a>
  */
 public class CheesyDriveHelper {
   private static final double SPEED_DEADBAND = 0.02;
@@ -59,7 +59,7 @@ public class CheesyDriveHelper {
       rightSpeed = -1.0;
     }
 
-    return new Pair<Double,Double>(leftSpeed, rightSpeed);
+    return new Pair<>(leftSpeed, rightSpeed);
   }
 
   /**

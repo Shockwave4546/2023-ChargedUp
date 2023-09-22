@@ -59,8 +59,7 @@ public class Constants {
    * 
    */
   public static class UpperPivot {
-    private static final float GEAR_RATIO = 1.0F;
-    public static final float POSITION_CONVERSION_FACTOR = 360.0F;
+    public static final double DISTANCE_PER_PULSE = 360.0 / QUAD_ENCODER_PULSES_PER_REVOLUTION;
     public static final int MOTOR_ID = 5;
     public static final double P = 0.087182;
     public static final double I = 0.0;
@@ -71,6 +70,7 @@ public class Constants {
     public static final double KG = 0.12365;
     public static final double MAX_VELOCITY = 250;
     public static final double MAX_ACCELERATION = 125;
+    public static final int[] ENCODER = new int[] {7, 8};
   } 
 
   /**

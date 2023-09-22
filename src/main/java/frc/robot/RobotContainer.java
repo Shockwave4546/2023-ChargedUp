@@ -27,7 +27,7 @@ import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 public class RobotContainer {
   // public static final PowerDistribution PDP = new PowerDistribution();
   private final IntakeSubsystem intake = new IntakeSubsystem();
-  public final UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
+  public final  UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   protected final DriveSubsystem drive = new DriveSubsystem();
   public final AutonomousManager auto = new AutonomousManager(drive, true);
   private final LEDSubsystem led = new LEDSubsystem();

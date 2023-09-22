@@ -2,14 +2,17 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
-import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.UpperPivot;
+import frc.robot.utils.EncoderConversionFactor;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
-import frc.robot.utils.shuffleboard.ShuffleboardFloat;
+import frc.robot.utils.shuffleboard.ShuffleboardDouble;
 import frc.robot.utils.telemetry.Telemetry;
 
 import static frc.robot.RobotContainer.tab;
@@ -18,45 +21,31 @@ import static frc.robot.utils.Utils.configureSparkMax;
 /**
  * Represents the upper arm responsible for carrying the intake to set angles.
  */
-public class UpperPivotSubsystem extends SubsystemBase {
-  private static final int MAX_ANGLE = 120;
-  private static final int SPARK_MAX_SLOT_ID = 0;
-  private static final int[] ENCODER = new int[] {7, 8};
-
+public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
+  private static final EncoderConversionFactor DEGREES = new EncoderConversionFactor(EncoderConversionFactor.ConversionType.RADIANS);
   private final ShuffleboardTab tab = tab("UpperPivot");
-
-  /**
-   * SparkMax doubles are all represented as float32s.
-   */
-  private final ShuffleboardFloat P = new ShuffleboardFloat(tab, "P", 1.0F);
-  private final ShuffleboardFloat I = new ShuffleboardFloat(tab, "I", 0.0F);
-  private final ShuffleboardFloat D = new ShuffleboardFloat(tab, "D", 0.0F);
-  private final ShuffleboardFloat FF = new ShuffleboardFloat(tab, "FF", 0.0F);
-
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
-  public final SparkMaxPIDController pidController = upperPivotMotor.getPIDController();
-  public final RelativeEncoder upperPivotEncoder = upperPivotMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8092);
-  public final ShuffleboardFloat upperPivotAngle = new ShuffleboardFloat(tab, "Upper Pivot Angle");
+  private final Encoder upperPivotEncoder = new Encoder(UpperPivot.ENCODER[0], UpperPivot.ENCODER[1]);
+  private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
+  private final ArmFeedforward feedForward = new ArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
+
   /**
    * Initializes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
    * Zeros all the encoders and setpoints in the event of previous data stored on them.
    * Configures the encoder's conversion factor to be in degrees.
    */
   public UpperPivotSubsystem() {
-    upperPivotEncoder.setPositionConversionFactor(360.0);
-    upperPivotEncoder.setPosition(0.0);
-
-    pidController.setFeedbackDevice(upperPivotEncoder);
-
-    upperPivotMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    super(new ProfiledPIDController(UpperPivot.P, UpperPivot.I, UpperPivot.D, new TrapezoidProfile.Constraints(UpperPivot.MAX_VELOCITY, UpperPivot.MAX_ACCELERATION)), 0);
+    DEGREES.applyTo(upperPivotEncoder);
+    resetPosition();
 
     upperPivotMotor.setSmartCurrentLimit(40);
 
-    setReference(0.0);
+    setGoal(0.0);
     new DebugMotorCommand(tab, "Upper Pivot", upperPivotMotor);
 
-    tab.addNumber("Abcdef", upperPivotEncoder::getPositionConversionFactor);
-    tab.addNumber("Upper Pivot Encoder Position", upperPivotEncoder::getPosition);
+    tab.add("Upper Pivot PID Controller", getController());
+    tab.addNumber("Upper Pivot Encoder Angle (Degrees)", () -> Units.radiansToDegrees(upperPivotEncoder.getDistance()));
     // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
   }
 
@@ -65,27 +54,17 @@ public class UpperPivotSubsystem extends SubsystemBase {
    * @see edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem#periodic()
    */
   @Override public void periodic() {
-    Telemetry.logDouble("Upper Pivot Setpoint", upperPivotAngle.get());
-    Telemetry.logDouble("Upper Pivot Encoder Position", upperPivotEncoder.getPosition());
+    Telemetry.logDouble("Upper Pivot Setpoint", getController().getGoal().position);
+    Telemetry.logDouble("Upper Pivot Encoder Angle (Degrees)", Units.radiansToDegrees(upperPivotEncoder.getDistance()));
 
-    if (P.get() != pidController.getP()) pidController.setP(P.get(), SPARK_MAX_SLOT_ID);
-    if (I.get() != pidController.getI()) pidController.setI(I.get(), SPARK_MAX_SLOT_ID);
-    if (D.get() != pidController.getD()) pidController.setP(D.get(), SPARK_MAX_SLOT_ID);
-    if (FF.get() != pidController.getFF()) pidController.setFF(FF.get(), SPARK_MAX_SLOT_ID);
-//    pidController.setSmartMotionMaxVelocity(0.0, SPARK_MAX_SLOT_ID);
-//    pidController.setSmartMotionMaxAccel(0.0, SPARK_MAX_SLOT_ID);
-
-    setReference((float) upperPivotAngle.get());
-  }
-
-  public void setReference(double angle) {
-    pidController.setReference(angle, CANSparkMax.ControlType.kPosition);
+    setGoal(Units.degreesToRadians(upperPivotAngle.get()));
+    super.periodic();
   }
 
   /**
    * @return
    */
-  public float getAngle() {
+  public double getAngleDegrees() {
     return upperPivotAngle.get();
   }
 
@@ -93,8 +72,8 @@ public class UpperPivotSubsystem extends SubsystemBase {
    *
    */
   public void setRawAngle(double angle) {
-    if (angle >= MAX_ANGLE) {
-      upperPivotAngle.set(MAX_ANGLE);
+    if (angle >= 110) {
+      upperPivotAngle.set(110);
     } else if (angle < 0) {
       upperPivotAngle.set(0);
     } else {
@@ -103,9 +82,27 @@ public class UpperPivotSubsystem extends SubsystemBase {
   }
 
   /**
+   * With a {@link edu.wpi.first.math.controller.ArmFeedforward} used in conjunction with a ProfiledPIDController, a voltage
+   * is applied to the motor to gradually approach the goal angle.
+   * @see edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem#useOutput(double, edu.wpi.first.math.trajectory.TrapezoidProfile.State)
+   */
+  @Override public void useOutput(double output, TrapezoidProfile.State setpoint) {
+    upperPivotMotor.setVoltage(output + feedForward.calculate(setpoint.position, setpoint.velocity));
+  }
+
+  /**
+   * Returns the angle of the upper pivot.
+   *
+   * @return the angle of the upper pivot in radians.
+   */
+  @Override public double getMeasurement() {
+    return upperPivotEncoder.getDistance();
+  }
+
+  /**
    * Zeros the angle reading of the encoder.
    */
   public void resetPosition() {
-    upperPivotEncoder.setPosition(0.0);
+    upperPivotEncoder.reset();
   }
 }
