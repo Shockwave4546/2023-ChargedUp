@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.UpperPivot;
 import frc.robot.utils.EncoderConversionFactor;
+import frc.robot.utils.ShockwaveArmFeedforward;
 import frc.robot.utils.shuffleboard.DebugMotorCommand;
 import frc.robot.utils.shuffleboard.ShuffleboardDouble;
 import frc.robot.utils.telemetry.Telemetry;
@@ -27,7 +28,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   private final CANSparkMax upperPivotMotor = configureSparkMax(new CANSparkMax(UpperPivot.MOTOR_ID, MotorType.kBrushless));
   private final Encoder upperPivotEncoder = new Encoder(UpperPivot.ENCODER[0], UpperPivot.ENCODER[1]);
   private final ShuffleboardDouble upperPivotAngle = new ShuffleboardDouble(tab, "Upper Pivot Angle");
-  private final ArmFeedforward feedForward = new ArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
+  private final ShockwaveArmFeedforward feedForward = new ShockwaveArmFeedforward(UpperPivot.KA, UpperPivot.KG, UpperPivot.KV, UpperPivot.KS);
 
   /**
    * Initializes the {@link edu.wpi.first.math.controller.ProfiledPIDController}, responsible for gradually move the arm to appropriate angle setpoints.
@@ -45,6 +46,7 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
     new DebugMotorCommand(tab, "Upper Pivot", upperPivotMotor);
 
     tab.add("Upper Pivot PID Controller", getController());
+    tab.add("Upper Pivot Feedforward", feedForward);
     tab.addNumber("Upper Pivot Encoder Angle (Degrees)", () -> Units.radiansToDegrees(upperPivotEncoder.getDistance()));
     // tab.addNumber("Upper Pivot Motor Output Voltage", () -> upperPivotMotor.getAppliedOutput());
   }

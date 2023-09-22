@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
    */
   @Override public void teleopPeriodic() {
     if (container.operatorController.getLeftY() < -0.1 || container.operatorController.getLeftY() > 0.1) {
-      container.upperPivot.setRawAngle(container.upperPivot.getAngle() - ((float) container.operatorController.getLeftY() / 10.0F));
+      container.upperPivot.setRawAngle(container.upperPivot.getAngleDegrees() - ((float) container.operatorController.getLeftY() / 10.0F));
     }
   }
 }
