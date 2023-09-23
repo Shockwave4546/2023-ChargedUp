@@ -33,15 +33,17 @@ public final class EncoderConversionFactor {
   /**
    * @param encoder the SparkMaxRelativeEncoder to perform the transformation.
    */
-  public void applyTo(RelativeEncoder encoder) {
+  public void applyTo(RelativeEncoder encoder, boolean inverted) {
     encoder.setPositionConversionFactor(toSparkMaxRelativeEncoder());
+    encoder.setInverted(inverted);
   }
 
   /**
    * @param encoder the Encoder to perform the transformation.
    */
-  public void applyTo(Encoder encoder) {
+  public void applyTo(Encoder encoder, boolean inverted) {
     encoder.setDistancePerPulse(toQuadEncoder());
+    encoder.setReverseDirection(inverted);
   }
 
   /**

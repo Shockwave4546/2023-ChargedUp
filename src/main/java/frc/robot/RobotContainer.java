@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,7 +18,7 @@ import java.util.Map;
  * 
  */
 public class RobotContainer {
-  // public static final PowerDistribution PDP = new PowerDistribution();
+  public static final PowerDistribution PDP = new PowerDistribution();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   public final  UpperPivotSubsystem upperPivot = new UpperPivotSubsystem();
   protected final DriveSubsystem drive = new DriveSubsystem();
@@ -36,12 +37,14 @@ public class RobotContainer {
    * 
    */
   public RobotContainer() {
+    Shuffleboard.getTab("Testttt").add(PDP);
     drive.setMaxSpeed(0.85);
     // GlobalTab.DEBUG.add("PDP", PDP);
     camera.setResolution(1280, 720);
     camera.setFPS(30);
     configureAuto();
     configureControllers();
+    upperPivot.enable();
   }
 
   /**

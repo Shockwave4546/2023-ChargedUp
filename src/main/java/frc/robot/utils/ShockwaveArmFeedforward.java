@@ -91,6 +91,7 @@ public class ShockwaveArmFeedforward implements Sendable {
   }
 
   @Override public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("PIDController");
     builder.addDoubleProperty("ks", this::getKs, this::setKs);
     builder.addDoubleProperty("kg", this::getKg, this::setKg);
     builder.addDoubleProperty("kv", this::getKv, this::setKv);
