@@ -23,7 +23,6 @@ public class AutoGoToPositionPresetCommand extends CommandBase {
 
   @Override public void initialize() {
     if (runUpperPivot) upperPivot.setRawAngle(preset.upperPivotAngle);
-    if (runWinch) winch.setAngle(preset.winchAngle);
     GoToPositionPresetCommand.currentPosition = preset;
   }
 

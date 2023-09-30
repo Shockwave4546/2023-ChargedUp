@@ -8,11 +8,10 @@ import frc.robot.subsystems.WinchSubsystem;
 public class GoToPositionPresetCommand extends InstantCommand {
   public static PositionPreset currentPosition = PositionPreset.STARTING;
 
-  public GoToPositionPresetCommand(PositionPreset preset, UpperPivotSubsystem upperPivot, WinchSubsystem winch) {
+  public GoToPositionPresetCommand(PositionPreset preset, UpperPivotSubsystem upperPivot) {
     super(() -> {
-      winch.setAngle(preset.winchAngle);
       upperPivot.setRawAngle(preset.upperPivotAngle);
       currentPosition = preset;
-    }, upperPivot, winch);
+    }, upperPivot);
   }
 }

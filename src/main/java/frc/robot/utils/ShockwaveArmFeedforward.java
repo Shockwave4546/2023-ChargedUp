@@ -74,6 +74,8 @@ public class ShockwaveArmFeedforward implements Sendable {
   }
 
   /**
+   * VERY IMPORTANT NOTE: Math#cos has been changed to Math#sin for the purposes of our Robot design.
+   *
    * Calculates the feedforward from the gains and setpoints.
    *
    * @param positionRadians       The position (angle) setpoint. This angle should be measured from the
@@ -85,7 +87,7 @@ public class ShockwaveArmFeedforward implements Sendable {
    */
   public double calculate(double positionRadians, double velocityRadPerSec, double accelRadPerSecSquared) {
     return ks * Math.signum(velocityRadPerSec)
-            + kg * Math.cos(positionRadians)
+            + kg * Math.sin(positionRadians)
             + kv * velocityRadPerSec
             + ka * accelRadPerSecSquared;
   }

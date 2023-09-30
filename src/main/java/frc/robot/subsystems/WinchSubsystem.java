@@ -21,7 +21,7 @@ public class WinchSubsystem extends SubsystemBase {
   private final CANSparkMax winchMotor = new CANSparkMax(Winch.MOTOR_ID, MotorType.kBrushless);
   private final ShuffleboardDouble setpoint = new ShuffleboardDouble(tab, "Angle Setpoint");
   private final Encoder encoder = new Encoder(5, 6);
-  private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled", true);
+  private final ShuffleboardBoolean enabled = new ShuffleboardBoolean(tab, "Enabled", false);
   private boolean reachedPosition = true;
 
   /**

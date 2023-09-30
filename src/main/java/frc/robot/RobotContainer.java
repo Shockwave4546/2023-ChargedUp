@@ -37,7 +37,6 @@ public class RobotContainer {
    * 
    */
   public RobotContainer() {
-    Shuffleboard.getTab("Testttt").add(PDP);
     drive.setMaxSpeed(0.85);
     // GlobalTab.DEBUG.add("PDP", PDP);
     camera.setResolution(1280, 720);
@@ -83,14 +82,14 @@ public class RobotContainer {
     operatorController.rightBumper().whileTrue(new PickUpGamePieceCommand(GamePiece.CUBE, intake, led));
     operatorController.rightTrigger().whileTrue(new ReleaseGamePieceCommand(intake));
 
-    operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.HIGH_CONE, upperPivot, winch));
-    operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot, winch));
-    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CONE, upperPivot, winch));
-    operatorController.y().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CUBE, upperPivot, winch));
+    operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.MID_CONE, upperPivot));
+    operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot));
+//    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CONE, upperPivot, winch));
+//    operatorController.y().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CUBE, upperPivot, winch));
 
-    operatorController.povLeft().onTrue(new GoToPositionPresetCommand(PositionPreset.CUBE, upperPivot, winch));
-    operatorController.povUp().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CONE, upperPivot, winch));
-    operatorController.povRight().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CUBE, upperPivot, winch));
-    operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
+//    operatorController.povLeft().onTrue(new GoToPositionPresetCommand(PositionPreset.CUBE, upperPivot));
+//    operatorController.povUp().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CONE, upperPivot));
+//    operatorController.povRight().onTrue(new GoToPositionPresetCommand(PositionPreset.HUMAN_PLAYER_PICKUP_CUBE, upperPivot));
+//    operatorController.povDown().onTrue(new GoToPositionPresetCommand(PositionPreset.DRIVING, upperPivot, winch));
   }
 } 
