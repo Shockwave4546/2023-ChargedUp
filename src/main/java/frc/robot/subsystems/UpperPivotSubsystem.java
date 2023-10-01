@@ -93,8 +93,8 @@ public class UpperPivotSubsystem extends ProfiledPIDSubsystem {
   public void setRawAngle(double angle) {
     if (angle >= 120) {
       upperPivotAngle.set(120);
-    } else if (angle < 0) {
-      upperPivotAngle.set(0);
+    } else if (angle <= -35) {
+      upperPivotAngle.set(-35);
     } else {
       upperPivotAngle.set(angle);
     }

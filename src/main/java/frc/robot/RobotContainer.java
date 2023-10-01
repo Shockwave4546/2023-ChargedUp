@@ -15,7 +15,7 @@ import frc.robot.subsystems.IntakeSubsystem.GamePiece;
 import java.util.Map;
 
 /**
- * 
+ *
  */
 public class RobotContainer {
   public static final PowerDistribution PDP = new PowerDistribution();
@@ -34,7 +34,7 @@ public class RobotContainer {
   }
 
   /**
-   * 
+   *
    */
   public RobotContainer() {
     drive.setMaxSpeed(0.85);
@@ -47,7 +47,7 @@ public class RobotContainer {
   }
 
   /**
-   * 
+   *
    */
   private void configureAuto() {
     // auto.addPath("ChargeStation", new PathConstraints(3.0, 1.0), Map.of(
@@ -63,17 +63,16 @@ public class RobotContainer {
     //   "EndPrintCommand", new PrintCommand("End Print Command")
     // ));
 
-    // auto.addPath("Mobility", new PathConstraints(3.0, 1.0), false, Map.of());
     auto.addPath("OnePiece", new PathConstraints(3.0, 1.0), true, Map.of(
-      "HighConePosition", new AutoGoToPositionPresetCommand(PositionPreset.HIGH_CONE, true, false, upperPivot, winch)
-        .andThen(new AutoGoToPositionPresetCommand(PositionPreset.HIGH_CONE, false, true, upperPivot, winch)),
-      "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake)
+            "MidConePosition", new AutoGoToPositionPresetCommand(PositionPreset.MID_CONE, upperPivot),
+            "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake),
+            "StartingPosition", new AutoGoToPositionPresetCommand(PositionPreset.STARTING, upperPivot)
     ));
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());
   }
 
   /**
-   * 
+   *
    */
   private void configureControllers() {
     driveController.leftBumper().whileTrue(new AdjustMaxSpeedCommand(0.35, drive));
@@ -84,6 +83,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(new GoToPositionPresetCommand(PositionPreset.MID_CONE, upperPivot));
     operatorController.b().onTrue(new GoToPositionPresetCommand(PositionPreset.STARTING, upperPivot));
+    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.BACK, upperPivot));
 //    operatorController.x().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CONE, upperPivot, winch));
 //    operatorController.y().onTrue(new GoToPositionPresetCommand(PositionPreset.FLOOR_CUBE, upperPivot, winch));
 

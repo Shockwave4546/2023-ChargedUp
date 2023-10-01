@@ -15,7 +15,8 @@ public enum PositionPreset {
    */
 
   MID_CONE(110.0),
-  STARTING(0.0);
+  STARTING(0.0),
+  BACK(-35.0);
 
   public final double upperPivotAngle;
 
