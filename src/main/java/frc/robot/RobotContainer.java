@@ -6,11 +6,13 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IO;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.IntakeSubsystem.GamePiece;
+import frc.robot.utils.shuffleboard.GlobalTab;
 
 import java.util.Map;
 
@@ -44,6 +46,8 @@ public class RobotContainer {
     configureAuto();
     configureControllers();
     upperPivot.enable();
+
+    GlobalTab.MATCH.addNumber("Upper Pivot Encoder Angle (Degrees)", upperPivot::getOffsetDistance);
   }
 
   /**
@@ -65,7 +69,8 @@ public class RobotContainer {
 
     auto.addPath("OnePiece", new PathConstraints(3.0, 1.0), true, Map.of(
             "MidConePosition", new AutoGoToPositionPresetCommand(PositionPreset.MID_CONE, upperPivot),
-            "ReleaseCone", new ReleaseGamePieceCommand(GamePiece.CONE, intake),
+            "WaitCommand", new WaitCommand(1.5),
+            "ReleaseCone", new AutoReleaseGamePieceCommand(GamePiece.CONE, intake),
             "StartingPosition", new AutoGoToPositionPresetCommand(PositionPreset.STARTING, upperPivot)
     ));
     // auto.addPath("Top2Piece", new PathConstraints(3.0, 1.0), Map.of());

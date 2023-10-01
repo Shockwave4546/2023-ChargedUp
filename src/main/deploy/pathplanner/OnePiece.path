@@ -18,6 +18,7 @@
       "stopEvent": {
         "names": [
           "MidConePosition",
+          "WaitCommand",
           "ReleaseCone"
         ],
         "executionBehavior": "sequential",
@@ -41,8 +42,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "StartingPosition"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
